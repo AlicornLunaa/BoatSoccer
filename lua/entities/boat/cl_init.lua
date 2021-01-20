@@ -1,0 +1,8 @@
+-- Clientside boat initialization
+include("shared.lua")
+
+-- Create entity methods
+function ENT:Draw()
+    self:DrawEntityOutline(1.0)
+    self:DrawModel()
+end
