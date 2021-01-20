@@ -7,7 +7,7 @@ include("shared.lua")
 
 -- Entity functions
 function ENT:Initialize()
-    self:SetModel("~models/props_interiors/BathTub01a.mdl")
+    self:SetModel("models/props_canal/boat002b.mdl")
     self:PhysicsInit(SOLID_VPHYSICS)
     self:SetMoveType(MOVETYPE_VPHYSICS)
     self:SetSolid(SOLID_VPHYSICS)
