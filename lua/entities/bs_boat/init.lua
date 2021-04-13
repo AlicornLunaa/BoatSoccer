@@ -109,5 +109,7 @@ function ENT:Think()
 end
 
 function ENT:OnRemove()
-    self:ExitBoat(self.driver)
+    if (self.driver != nil) then
+        self:ExitBoat(self.driver)
+    end
 end
