@@ -12,6 +12,8 @@ function ENT:Initialize()
 
     -- Initialize members
     self.users = {} -- The list of users actually ready to play
+    boat_soccer.controllers[self:EntIndex()] = {}
+    boat_soccer.controllers[self:EntIndex()].players = {}
 
     -- Physics initialization
     local phys = self:GetPhysicsObject()
@@ -23,20 +25,31 @@ end
 
 function ENT:Use( activator, caller )
     if (activator:IsValid() and activator:IsPlayer()) then
-        if (self.users[activator:SteamID64()] == nil) then
-            self.users[activator:SteamID64()] = true
-            return
+        if (self.users[activator] == nil) then
+            self.users[activator] = true
+
+            boat_soccer.controllers[self:EntIndex()].players[activator:SteamID64()] = {
+                name = activator:Nick()
+            }
+        else
+            self.users[activator] = nil
+            boat_soccer.controllers[self:EntIndex()].players[activator:SteamID64()] = nil
+            boat_soccer.UpdateControllerClient(activator)
         end
-
-        self.users[activator:SteamID64()] = !self.users[activator:SteamID64()]
     end
-
-    PrintTable(self.users)
 end
 
 function ENT:Think()
+    -- Update entity client
+    for k, v in pairs(self.users) do
+        boat_soccer.UpdateControllerClient(k)
+    end
 
     -- Faster update
     self:NextThink(CurTime())
     return true
+end
+
+function ENT:OnRemove()
+    boat_soccer.controllers[self:EntIndex()] = nil
 end
