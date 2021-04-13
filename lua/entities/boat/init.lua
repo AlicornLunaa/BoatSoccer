@@ -24,6 +24,16 @@ local function applyTorque(ent, force)
     phys:ApplyForceOffset(-direction, -offset)
 end
 
+function ENT:ExitBoat(activator)
+    -- Runs exit sequence
+    print("Exitted the boat")
+    
+    self.driver:UnSpectate()
+    self.driver:Spawn()
+    self.driver:SetPos(self:GetPos() + Vector(0, 0, 50))
+    self.driver = nil
+end
+
 -- Entity functions
 function ENT:Initialize()
     -- Initialize entity
@@ -56,13 +66,11 @@ function ENT:Use( activator )
             activator:Spectate(OBS_MODE_CHASE)
             activator:SpectateEntity(self)
             activator:SetPos(Vector(0, 0, 100))
+            activator:StripWeapons()
 
             print("Entered the boat")
         elseif (self.driver == activator) then
-            print("Exitted the boat")
-            
-            self.driver:UnSpectate()
-            self.driver = nil
+            self:ExitBoat(activator)
         end
     end
 end
@@ -91,10 +99,7 @@ function ENT:Think()
 
         -- Vehicle exit
         if(self.driver:KeyPressed(IN_USE)) then
-            print("Exitted the boat")
-
-            self.driver:UnSpectate()
-            self.driver = nil
+            self:ExitBoat(activator)
         end
     end
 
