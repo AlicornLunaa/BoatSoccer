@@ -84,8 +84,10 @@ function ENT:Think()
         end
         
         -- Set angles
-        local targetAngle = self.driver:EyeAngles() - self:GetAngles() - self:GetLocalAngularVelocity() * 10
-        applyTorque(self, Vector(-self:GetAngles().r * 0.1, 0, targetAngle.y * 1) * phys:GetMass())
+        local _, localAng = WorldToLocal(self:GetPos(), self:GetAngles(), self.driver:GetPos(), self.driver:EyeAngles())
+        localAng.y = math.Clamp(localAng.y + (self:GetPhysicsObject():GetAngleVelocity() * 0.1).z, -45, 45)
+        localAng.z = math.Clamp(localAng.z + (self:GetPhysicsObject():GetAngleVelocity() * 0.1).x, -45, 45)
+        applyTorque(self, Vector(-localAng.z * 0.5, 0, localAng.y * -10) * phys:GetMass())
 
         -- Vehicle exit
         if(self.driver:KeyPressed(IN_USE)) then
@@ -95,8 +97,6 @@ function ENT:Think()
             self.driver = nil
         end
     end
-    
-
 
     -- Faster update
     self:NextThink(CurTime())
