@@ -107,3 +107,7 @@ function ENT:Think()
     self:NextThink(CurTime())
     return true
 end
+
+function ENT:OnRemove()
+    self:ExitBoat(self.driver)
+end
