@@ -27,7 +27,7 @@ end
 function ENT:ExitBoat(activator)
     -- Runs exit sequence
     print("Exitted the boat")
-    
+
     self.driver:UnSpectate()
     self.driver:Spawn()
     self.driver:SetPos(self:GetPos() + Vector(0, 0, 50))
@@ -81,16 +81,16 @@ function ENT:Think()
         -- Movement
         local phys = self:GetPhysicsObject()
 
-        if(self:WaterLevel() >= 1) then
-            if(self.driver:KeyDown(IN_FORWARD)) then
+        if (self:WaterLevel() >= 1) then
+            if (self.driver:KeyDown(IN_FORWARD)) then
                 phys:ApplyForceCenter(self:GetForward() * self.speed)
             end
 
-            if(self.driver:KeyDown(IN_BACK)) then
+            if (self.driver:KeyDown(IN_BACK)) then
                 phys:ApplyForceCenter(self:GetForward() * -self.speed)
             end
         end
-        
+
         -- Set angles
         local _, localAng = WorldToLocal(self:GetPos(), self:GetAngles(), self.driver:GetPos(), self.driver:EyeAngles())
         localAng.y = math.Clamp(localAng.y + (self:GetPhysicsObject():GetAngleVelocity() * 0.1).z, -45, 45)
@@ -98,7 +98,7 @@ function ENT:Think()
         applyTorque(self, Vector(-localAng.z * 0.5, 0, localAng.y * -10) * phys:GetMass())
 
         -- Vehicle exit
-        if(self.driver:KeyPressed(IN_USE)) then
+        if (self.driver:KeyPressed(IN_USE)) then
             self:ExitBoat(activator)
         end
     end
