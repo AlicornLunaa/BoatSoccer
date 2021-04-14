@@ -12,6 +12,7 @@ function ENT:Initialize()
 
     -- Initialize members
     boat_soccer.controllers[self:EntIndex()] = {}
+    boat_soccer.controllers[self:EntIndex()].entity = self
     boat_soccer.controllers[self:EntIndex()].players = {}
     boat_soccer.UpdateControllerClient()
 
@@ -40,4 +41,9 @@ end
 
 function ENT:OnRemove()
     boat_soccer.controllers[self:EntIndex()] = nil
+end
+
+-- Game specific functions
+function ENT:StartGame()
+    print("Starting game!")
 end

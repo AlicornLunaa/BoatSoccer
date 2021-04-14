@@ -4,6 +4,7 @@ util.AddNetworkString("boat_soccer:open_menu")
 util.AddNetworkString("boat_soccer:join")
 util.AddNetworkString("boat_soccer:leave")
 util.AddNetworkString("boat_soccer:switch_team")
+util.AddNetworkString("boat_soccer:start_game")
 
 -- Functions
 function boat_soccer.UpdateControllerClient(ply)
@@ -21,8 +22,16 @@ end
 
 function boat_soccer.OpenMenu(ply, id)
     -- Opens the derma panel on the client
+    local ma
+    if (boat_soccer.controllers[id].players[ply:SteamID64()] == nil) then
+        ma = false 
+    else
+        ma = boat_soccer.controllers[id].players[ply:SteamID64()].matchAdmin
+    end
+    
     net.Start("boat_soccer:open_menu")
         net.WriteInt(id, 8)
+        net.WriteBool(ma)
     net.Send(ply)
 end
 
@@ -40,4 +49,9 @@ end )
 net.Receive("boat_soccer:switch_team", function(len, ply)
     local id = net.ReadInt(8)
     boat_soccer.SwitchTeam(ply, id)
+end )
+
+net.Receive("boat_soccer:start_game", function(len, ply)
+    local id = net.ReadInt(8)
+    boat_soccer.StartGame(id)
 end )

@@ -34,3 +34,9 @@ function boat_soccer_client.SwitchTeam(id)
         net.SendToServer()
     end
 end
+
+function boat_soccer_client.StartGame(id)
+    net.Start("boat_soccer:start_game")
+        net.WriteInt(id, 8)
+    net.SendToServer()
+end

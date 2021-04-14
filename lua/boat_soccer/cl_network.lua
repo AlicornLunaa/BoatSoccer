@@ -6,5 +6,6 @@ end )
 
 net.Receive("boat_soccer:open_menu", function()
     local id = net.ReadInt(8)
-    boat_soccer_client.OpenMenu(id)
+    local matchAdmin = net.ReadBool()
+    boat_soccer_client.OpenMenu(id, matchAdmin)
 end )

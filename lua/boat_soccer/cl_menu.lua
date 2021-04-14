@@ -1,5 +1,5 @@
 -- Menu derma handler
-function boat_soccer_client.OpenMenu(id)
+function boat_soccer_client.OpenMenu(id, matchAdmin)
     local frame = vgui.Create("DFrame")
     frame:SetSize(500, 300)
     frame:Center()
@@ -59,6 +59,17 @@ function boat_soccer_client.OpenMenu(id)
     switchTeamButton.DoClick = function()
         if (boat_soccer_client.joined) then
             boat_soccer_client.SwitchTeam(id)
+        end
+    end
+
+    if (matchAdmin) then
+        local startGameButton = vgui.Create("DButton", frame)
+        startGameButton:SetSize(190, 20)
+        startGameButton:SetPos(305, 65)
+        startGameButton:SetText("Start Game")
+    
+        startGameButton.DoClick = function()
+            boat_soccer_client.StartGame(id)
         end
     end
 end
