@@ -26,25 +26,24 @@ end
 
 function ENT:Use( activator, caller )
     if (activator:IsValid() and activator:IsPlayer()) then
-        if (self.users[activator] == nil) then
-            self.users[activator] = true
+        boat_soccer.OpenMenu(activator, self:EntIndex())
+        -- if (self.users[activator] == nil) then
+        --     self.users[activator] = true
 
-            boat_soccer.controllers[self:EntIndex()].players[activator:SteamID64()] = {
-                name = activator:Nick()
-            }
-        else
-            self.users[activator] = nil
-            boat_soccer.controllers[self:EntIndex()].players[activator:SteamID64()] = nil
-            boat_soccer.UpdateControllerClient(activator)
-        end
+        --     boat_soccer.controllers[self:EntIndex()].players[activator:SteamID64()] = {
+        --         name = activator:Nick()
+        --     }
+        -- else
+        --     self.users[activator] = nil
+        --     boat_soccer.controllers[self:EntIndex()].players[activator:SteamID64()] = nil
+        --     boat_soccer.UpdateControllerClient(activator)
+        -- end
     end
 end
 
 function ENT:Think()
     -- Update entity client
-    for k, v in pairs(self.users) do
-        boat_soccer.UpdateControllerClient(k)
-    end
+    boat_soccer.UpdateControllerClient()
 
     -- Faster update
     self:NextThink(CurTime())

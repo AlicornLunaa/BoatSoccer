@@ -1,11 +1,15 @@
-include('shared.lua')
+include("shared.lua")
 
 local function DrawScoreboard(pos, ang, scale, players)
     cam.Start3D2D(pos, ang, scale)
+        -- Title
         draw.RoundedBox(1, -50, -80, 100, 15, Color(53, 53, 53, 200))
         draw.DrawText("Boat Soccer", "Trebuchet18", 0, -80, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
+
+        -- Background
         draw.RoundedBox(1, -50, -65, 100, 85, Color(141, 141, 141, 200))
 
+        -- Player list
         for k, v in pairs(players) do
             draw.DrawText(v.name, "Trebuchet18", 0, -68, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
         end

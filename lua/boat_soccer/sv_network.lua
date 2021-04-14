@@ -1,5 +1,8 @@
 -- Initialize net messages
 util.AddNetworkString("boat_soccer:update_controllers")
+util.AddNetworkString("boat_soccer:open_menu")
+util.AddNetworkString("boat_soccer:join")
+util.AddNetworkString("boat_soccer:leave")
 
 -- Functions
 function boat_soccer.UpdateControllerClient(ply)
@@ -14,3 +17,22 @@ function boat_soccer.UpdateControllerClient(ply)
         net.Send(ply)
     end
 end
+
+function boat_soccer.OpenMenu(ply, id)
+    -- Opens the derma panel on the client
+    net.Start("boat_soccer:open_menu")
+        net.WriteInt(id, 8)
+    net.Send(ply)
+end
+
+-- Receives
+net.Receive("boat_soccer:join", function(len, ply)
+    local id = net.ReadInt(8)
+    local color = net.ReadColor()
+    boat_soccer.AddPlayer(ply, color, id)
+end )
+
+net.Receive("boat_soccer:leave", function(len, ply)
+    local id = net.ReadInt(8)
+    boat_soccer.DelPlayer(ply, id)
+end )
