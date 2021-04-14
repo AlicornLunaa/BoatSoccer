@@ -11,12 +11,11 @@ concommand.Add("bs_open_menu", function()
 end )
 
 -- Functions
-function boat_soccer_client.Join(color, id)
+function boat_soccer_client.Join(id)
     boat_soccer_client.joined = true
 
     net.Start("boat_soccer:join")
         net.WriteInt(id, 8)
-        net.WriteColor(color)
     net.SendToServer()
 end
 

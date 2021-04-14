@@ -32,16 +32,7 @@ function boat_soccer_client.OpenMenu(id)
             playerList1:Add(label)
         end
     end
-
-    -- Join/leave/color buttons
-    local mixer = vgui.Create("DColorMixer", frame)
-    mixer:SetSize(190, 190)
-    mixer:SetPos(305, 65)
-    mixer:SetPalette(true)
-    mixer:SetAlphaBar(false)
-    mixer:SetWangs(true)
-    mixer:SetColor(Color(LocalPlayer():GetWeaponColor().x * 255, LocalPlayer():GetWeaponColor().y * 255, LocalPlayer():GetWeaponColor().z * 255))
-
+    
     local joinLeaveButton = vgui.Create("DButton", frame)
     joinLeaveButton:SetSize(190, 20)
     joinLeaveButton:SetPos(305, 25)
@@ -55,7 +46,7 @@ function boat_soccer_client.OpenMenu(id)
             boat_soccer_client.Leave(id)
             joinLeaveButton:SetText("Join game")
         else
-            boat_soccer_client.Join(mixer:GetColor(), id)
+            boat_soccer_client.Join(id)
             joinLeaveButton:SetText("Leave game")
         end
     end

@@ -29,8 +29,7 @@ end
 -- Receives
 net.Receive("boat_soccer:join", function(len, ply)
     local id = net.ReadInt(8)
-    local color = net.ReadColor()
-    boat_soccer.AddPlayer(ply, color, id)
+    boat_soccer.AddPlayer(ply, id)
 end )
 
 net.Receive("boat_soccer:leave", function(len, ply)

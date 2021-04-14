@@ -5,11 +5,10 @@ boat_soccer.controllers = {}
 include("sv_network.lua")
 
 -- Functions
-function boat_soccer.AddPlayer(ply, c, id)
+function boat_soccer.AddPlayer(ply, id)
     -- Adds player to the controller with that id
     boat_soccer.controllers[id].players[ply:SteamID64()] = {
         name = ply:Nick(),
-        color = c,
         team = 0
     }
 end
