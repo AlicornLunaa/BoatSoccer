@@ -15,7 +15,7 @@ end
 function ENT:Draw()
     self:DrawModel()
 
-    local mins, maxs = self:GetModelBounds()
+    local _, maxs = self:GetModelBounds()
     local pos = self:LocalToWorld(Vector(0, 0, maxs.z + 4))
     local ang = self:LocalToWorldAngles(Angle(0, 90, 90))
 

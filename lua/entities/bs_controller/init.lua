@@ -14,7 +14,7 @@ function ENT:Initialize()
     self.users = {} -- The list of users actually ready to play
     boat_soccer.controllers[self:EntIndex()] = {}
     boat_soccer.controllers[self:EntIndex()].players = {}
-    boat_soccer.UpdateControllerClient(self:GetOwner())
+    boat_soccer.UpdateControllerClient()
 
     -- Physics initialization
     local phys = self:GetPhysicsObject()
