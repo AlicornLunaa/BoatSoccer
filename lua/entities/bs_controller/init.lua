@@ -11,7 +11,6 @@ function ENT:Initialize()
     self:SetUseType(SIMPLE_USE)
 
     -- Initialize members
-    self.users = {} -- The list of users actually ready to play
     boat_soccer.controllers[self:EntIndex()] = {}
     boat_soccer.controllers[self:EntIndex()].players = {}
     boat_soccer.UpdateControllerClient()
@@ -27,17 +26,6 @@ end
 function ENT:Use( activator, caller )
     if (activator:IsValid() and activator:IsPlayer()) then
         boat_soccer.OpenMenu(activator, self:EntIndex())
-        -- if (self.users[activator] == nil) then
-        --     self.users[activator] = true
-
-        --     boat_soccer.controllers[self:EntIndex()].players[activator:SteamID64()] = {
-        --         name = activator:Nick()
-        --     }
-        -- else
-        --     self.users[activator] = nil
-        --     boat_soccer.controllers[self:EntIndex()].players[activator:SteamID64()] = nil
-        --     boat_soccer.UpdateControllerClient(activator)
-        -- end
     end
 end
 

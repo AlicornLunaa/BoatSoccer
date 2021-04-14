@@ -1,17 +1,25 @@
 include("shared.lua")
+include("boat_soccer/sh_init.lua")
 
 local function DrawScoreboard(pos, ang, scale, players)
     cam.Start3D2D(pos, ang, scale)
         -- Title
-        draw.RoundedBox(1, -50, -80, 100, 15, Color(53, 53, 53, 200))
+        draw.RoundedBox(1, -100, -80, 200, 15, Color(53, 53, 53, 200))
         draw.DrawText("Boat Soccer", "Trebuchet18", 0, -80, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
 
-        -- Background
-        draw.RoundedBox(1, -50, -65, 100, 85, Color(141, 141, 141, 200))
+        -- Backgrounds
+        draw.RoundedBox(0, -100, -65, 100, 85, boat_soccer_config.team0)
+        draw.RoundedBox(0, 0, -65, 100, 85, boat_soccer_config.team1)
 
         -- Player list
+        line = 0
         for k, v in pairs(players) do
-            draw.DrawText(v.name, "Trebuchet18", 0, -68, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
+            if (v.team == 0) then
+                draw.DrawText(v.name, "Trebuchet16", -98, -68 + line, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT)
+            else
+                draw.DrawText(v.name, "Trebuchet16", 2, -68 + line, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT)
+            end
+            line = line + 8
         end
     cam.End3D2D()
 end

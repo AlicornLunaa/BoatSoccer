@@ -3,6 +3,7 @@ util.AddNetworkString("boat_soccer:update_controllers")
 util.AddNetworkString("boat_soccer:open_menu")
 util.AddNetworkString("boat_soccer:join")
 util.AddNetworkString("boat_soccer:leave")
+util.AddNetworkString("boat_soccer:switch_team")
 
 -- Functions
 function boat_soccer.UpdateControllerClient(ply)
@@ -11,7 +12,7 @@ function boat_soccer.UpdateControllerClient(ply)
 
     net.WriteTable(boat_soccer.controllers)
 
-    if(ply == nil) then
+    if (ply == nil) then
         net.Broadcast()
     else
         net.Send(ply)
@@ -35,4 +36,9 @@ end )
 net.Receive("boat_soccer:leave", function(len, ply)
     local id = net.ReadInt(8)
     boat_soccer.DelPlayer(ply, id)
+end )
+
+net.Receive("boat_soccer:switch_team", function(len, ply)
+    local id = net.ReadInt(8)
+    boat_soccer.SwitchTeam(ply, id)
 end )

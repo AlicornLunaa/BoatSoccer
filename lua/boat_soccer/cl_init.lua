@@ -1,7 +1,7 @@
 -- Client initialization
 boat_soccer_client = boat_soccer_client or {}
 boat_soccer_client.controllers = {}
-boat_soccer_client.joined = boat_soccer_client.joined or false 
+boat_soccer_client.joined = false 
 
 include("cl_network.lua")
 include("cl_menu.lua")
@@ -26,4 +26,12 @@ function boat_soccer_client.Leave(id)
     net.Start("boat_soccer:leave")
         net.WriteInt(id, 8)
     net.SendToServer()
+end
+
+function boat_soccer_client.SwitchTeam(id)
+    if (boat_soccer_client.joined) then
+        net.Start("boat_soccer:switch_team")
+            net.WriteInt(id, 8)
+        net.SendToServer()
+    end
 end
