@@ -14,7 +14,7 @@ function boat_soccer_client.OpenMenu(id, matchAdmin)
     playerList0:SetPaintBackground(true)
     playerList0:SetBackgroundColor(Color(207, 147, 147))
     playerList0:Add(Label("Team 1"))
-    
+
     local playerList1 = vgui.Create("DListLayout", frame)
     playerList1:SetSize(145, 270)
     playerList1:SetPos(155, 25)
@@ -32,7 +32,7 @@ function boat_soccer_client.OpenMenu(id, matchAdmin)
             playerList1:Add(label)
         end
     end
-    
+
     local joinLeaveButton = vgui.Create("DButton", frame)
     joinLeaveButton:SetSize(190, 20)
     joinLeaveButton:SetPos(305, 25)
@@ -67,7 +67,7 @@ function boat_soccer_client.OpenMenu(id, matchAdmin)
         startGameButton:SetSize(190, 20)
         startGameButton:SetPos(305, 65)
         startGameButton:SetText("Start Game")
-    
+
         startGameButton.DoClick = function()
             boat_soccer_client.StartGame(id)
         end

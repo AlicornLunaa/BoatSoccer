@@ -9,9 +9,9 @@ function boat_soccer.AddPlayer(ply, id)
     -- Adds player to the controller with that id
     local ma
     if (#boat_soccer.controllers[id].players > 1) then
-        ma = false 
+        ma = false
     else
-        ma = true 
+        ma = true
     end
 
     boat_soccer.controllers[id].players[ply:SteamID64()] = {
