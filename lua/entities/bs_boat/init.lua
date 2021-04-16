@@ -46,7 +46,7 @@ function ENT:Initialize()
 
     -- Initialize members
     self.driver = nil
-    self.speed = 5000
+    self.speed = 1000
     self.turnSpeed = 1
 
     -- Start physics
@@ -88,6 +88,15 @@ function ENT:Think()
 
             if (self.driver:KeyDown(IN_BACK)) then
                 phys:ApplyForceCenter(self:GetForward() * -self.speed)
+            end
+
+            if (self.driver:KeyDown(IN_MOVELEFT)) then
+                print("A")
+                phys:ApplyForceCenter(self:GetRight() * -self.speed)
+            end
+
+            if (self.driver:KeyDown(IN_MOVERIGHT)) then
+                phys:ApplyForceCenter(self:GetRight() * self.speed)
             end
         end
 
