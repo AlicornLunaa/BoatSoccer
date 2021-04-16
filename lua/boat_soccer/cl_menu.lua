@@ -1,4 +1,31 @@
 -- Menu derma handler
+-- Local functions
+local function RefreshList(players, playerList0, playerList1)
+    playerList0:Clear()
+    playerList1:Clear()
+
+    playerList0:Add(Label("Team 1"))
+    playerList1:Add(Label("Team 2"))
+
+    for k, v in pairs(players) do
+        local label = Label(v.name)
+        label:SetTextColor(Color(0, 0, 0))
+
+        if (v.team == 0) then
+            playerList0:Add(label)
+        else
+            playerList1:Add(label)
+        end
+    end
+end
+
+local function CreateButtons(frame, joined, matchAdmin)
+    
+
+    return switchTeamButton, startGameButton
+end
+
+-- API functions
 function boat_soccer_client.OpenMenu(id, matchAdmin)
     local frame = vgui.Create("DFrame")
     frame:SetSize(500, 300)
@@ -13,25 +40,14 @@ function boat_soccer_client.OpenMenu(id, matchAdmin)
     playerList0:SetPos(5, 25)
     playerList0:SetPaintBackground(true)
     playerList0:SetBackgroundColor(Color(207, 147, 147))
-    playerList0:Add(Label("Team 1"))
 
     local playerList1 = vgui.Create("DListLayout", frame)
     playerList1:SetSize(145, 270)
     playerList1:SetPos(155, 25)
     playerList1:SetPaintBackground(true)
     playerList1:SetBackgroundColor(Color(159, 183, 218))
-    playerList1:Add(Label("Team 2"))
 
-    for k, v in pairs(boat_soccer_client.controllers[id].players) do
-        local label = Label(v.name)
-        label:SetTextColor(Color(0, 0, 0))
-
-        if (v.team == 0) then
-            playerList0:Add(label)
-        else
-            playerList1:Add(label)
-        end
-    end
+    RefreshList(boat_soccer_client.controllers[id].players, playerList0, playerList1)
 
     local joinLeaveButton = vgui.Create("DButton", frame)
     joinLeaveButton:SetSize(190, 20)
@@ -55,21 +71,35 @@ function boat_soccer_client.OpenMenu(id, matchAdmin)
     switchTeamButton:SetSize(190, 20)
     switchTeamButton:SetPos(305, 45)
     switchTeamButton:SetText("Switch team")
-
     switchTeamButton.DoClick = function()
-        if (boat_soccer_client.joined) then
-            boat_soccer_client.SwitchTeam(id)
-        end
+        boat_soccer_client.SwitchTeam(id)
     end
 
-    if (matchAdmin) then
-        local startGameButton = vgui.Create("DButton", frame)
-        startGameButton:SetSize(190, 20)
-        startGameButton:SetPos(305, 65)
-        startGameButton:SetText("Start Game")
-
-        startGameButton.DoClick = function()
-            boat_soccer_client.StartGame(id)
-        end
+    local startGameButton = vgui.Create("DButton", frame)
+    startGameButton:SetSize(190, 20)
+    startGameButton:SetPos(305, 65)
+    startGameButton:SetText("Start Game")
+    startGameButton.DoClick = function()
+        boat_soccer_client.StartGame(id)
     end
+
+    hook.Add("boat_soccer:reload_derma", "Reload Derma", function()
+        if (!frame:IsValid()) then
+            hook.Remove("boat_soccer:reload_derma", "Reload Derma")
+        else
+            RefreshList(boat_soccer_client.controllers[id].players, playerList0, playerList1)
+
+            if (boat_soccer_client.joined) then
+                switchTeamButton:Show()
+            else
+                switchTeamButton:Hide()
+            end
+
+            if (boat_soccer_client.IsMatchAdmin(id)) then
+                startGameButton:Show()
+            else
+                startGameButton:Hide()
+            end
+        end
+    end )
 end

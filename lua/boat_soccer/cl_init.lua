@@ -11,6 +11,14 @@ concommand.Add("bs_open_menu", function()
 end )
 
 -- Functions
+function boat_soccer_client.IsMatchAdmin(id)
+    if (boat_soccer_client.controllers[id].players[LocalPlayer():SteamID64()] == nil) then
+        return false
+    else
+        return boat_soccer_client.controllers[id].players[LocalPlayer():SteamID64()].matchAdmin
+    end
+end
+
 function boat_soccer_client.Join(id)
     boat_soccer_client.joined = true
 

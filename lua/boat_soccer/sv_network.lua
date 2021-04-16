@@ -22,16 +22,8 @@ end
 
 function boat_soccer.OpenMenu(ply, id)
     -- Opens the derma panel on the client
-    local ma
-    if (boat_soccer.controllers[id].players[ply:SteamID64()] == nil) then
-        ma = false
-    else
-        ma = boat_soccer.controllers[id].players[ply:SteamID64()].matchAdmin
-    end
-
     net.Start("boat_soccer:open_menu")
         net.WriteInt(id, 8)
-        net.WriteBool(ma)
     net.Send(ply)
 end
 
