@@ -1,6 +1,7 @@
 AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "shared.lua" )
 include("shared.lua")
+include("boat_soccer/sh_init.lua")
 
 function ENT:Initialize()
     -- Initialize entities
@@ -44,6 +45,7 @@ function ENT:OnRemove()
     -- Force every player to leave
     for k, v in pairs(boat_soccer.controllers[self:EntIndex()].players) do
         boat_soccer.ForceLeave(player.GetBySteamID64(k))
+        boat_soccer.CloseDerma(player.GetBySteamID64(k))
     end
 
     -- Delete every boat
@@ -61,6 +63,8 @@ function ENT:StartGame()
 
     -- Spawn boats for each player on each team
     for k, v in pairs(boat_soccer.controllers[self:EntIndex()].players) do
+        boat_soccer.CloseDerma(player.GetBySteamID64(k))
+
         local color
         if (v.team == 0) then
             color = boat_soccer_config.team0
@@ -72,5 +76,6 @@ function ENT:StartGame()
         self.spawnedBoats[#self.spawnedBoats]:SetPos(self:GetPos() + Vector(0, 0, 100))
         self.spawnedBoats[#self.spawnedBoats]:SetColor(color)
         self.spawnedBoats[#self.spawnedBoats]:Spawn()
+        self.spawnedBoats[#self.spawnedBoats]:Use(player.GetBySteamID64(k))
     end
 end

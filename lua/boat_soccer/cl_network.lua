@@ -12,5 +12,9 @@ end )
 
 net.Receive("boat_soccer:force_leave", function()
     boat_soccer_client.joined = false
-    print("Left")
+    hook.Call("boat_soccer:close_derma")
+end )
+
+net.Receive("boat_soccer:close_derma", function()
+    hook.Call("boat_soccer:close_derma")
 end )

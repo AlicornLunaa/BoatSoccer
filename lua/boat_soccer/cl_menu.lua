@@ -98,4 +98,9 @@ function boat_soccer_client.OpenMenu(id, matchAdmin)
             end
         end
     end )
+
+    hook.Add("boat_soccer:close_derma", "Close Derma", function()
+        hook.Remove("boat_soccer:close_derma", "Close Derma")
+        frame:Close()
+    end )
 end

@@ -6,6 +6,7 @@ util.AddNetworkString("boat_soccer:leave")
 util.AddNetworkString("boat_soccer:switch_team")
 util.AddNetworkString("boat_soccer:start_game")
 util.AddNetworkString("boat_soccer:force_leave")
+util.AddNetworkString("boat_soccer:close_derma")
 
 -- Functions
 function boat_soccer.UpdateControllerClient(ply)
@@ -23,6 +24,11 @@ end
 
 function boat_soccer.ForceLeave(ply)
     net.Start("boat_soccer:force_leave")
+    net.Send(ply)
+end
+
+function boat_soccer.CloseDerma(ply)
+    net.Start("boat_soccer:close_derma")
     net.Send(ply)
 end
 
