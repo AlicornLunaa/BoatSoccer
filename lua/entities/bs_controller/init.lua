@@ -12,11 +12,16 @@ function ENT:Initialize()
     self:SetUseType(SIMPLE_USE)
 
     -- Initialize members
+    self.goal0 = nil
+    self.goal1 = nil
     self.spawnedBoats = {}
     boat_soccer.controllers[self:EntIndex()] = {}
     boat_soccer.controllers[self:EntIndex()].entity = self
     boat_soccer.controllers[self:EntIndex()].players = {}
     boat_soccer.UpdateControllerClient()
+
+    -- Create goals
+    --self.goal0 = ents.Create("")
 
     -- Physics initialization
     local phys = self:GetPhysicsObject()
@@ -53,14 +58,14 @@ function ENT:OnRemove()
         v:Remove()
     end
 
+    goal0:Remove()
+    goal1:Remove()
+
     boat_soccer.controllers[self:EntIndex()] = nil
 end
 
 -- Game specific functions
 function ENT:StartGame()
-    -- Spawn bounding area
-
-
     -- Spawn boats for each player on each team
     for k, v in pairs(boat_soccer.controllers[self:EntIndex()].players) do
         boat_soccer.CloseDerma(player.GetBySteamID64(k))
