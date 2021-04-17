@@ -11,6 +11,7 @@ function ENT:Initialize()
     self:SetUseType(SIMPLE_USE)
 
     -- Initialize members
+    self.spawnedBoats = {}
     boat_soccer.controllers[self:EntIndex()] = {}
     boat_soccer.controllers[self:EntIndex()].entity = self
     boat_soccer.controllers[self:EntIndex()].players = {}
@@ -40,10 +41,36 @@ function ENT:Think()
 end
 
 function ENT:OnRemove()
+    -- Force every player to leave
+    for k, v in pairs(boat_soccer.controllers[self:EntIndex()].players) do
+        boat_soccer.ForceLeave(player.GetBySteamID64(k))
+    end
+
+    -- Delete every boat
+    for k, v in pairs(self.spawnedBoats) do
+        v:Remove()
+    end
+
     boat_soccer.controllers[self:EntIndex()] = nil
 end
 
 -- Game specific functions
 function ENT:StartGame()
-    print("Starting game!")
+    -- Spawn bounding area
+
+
+    -- Spawn boats for each player on each team
+    for k, v in pairs(boat_soccer.controllers[self:EntIndex()].players) do
+        local color
+        if (v.team == 0) then
+            color = boat_soccer_config.team0
+        else
+            color = boat_soccer_config.team1
+        end
+
+        self.spawnedBoats[#self.spawnedBoats + 1] = ents.Create("bs_boat")
+        self.spawnedBoats[#self.spawnedBoats]:SetPos(self:GetPos() + Vector(0, 0, 100))
+        self.spawnedBoats[#self.spawnedBoats]:SetColor(color)
+        self.spawnedBoats[#self.spawnedBoats]:Spawn()
+    end
 end

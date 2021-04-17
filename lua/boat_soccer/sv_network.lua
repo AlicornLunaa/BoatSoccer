@@ -5,6 +5,7 @@ util.AddNetworkString("boat_soccer:join")
 util.AddNetworkString("boat_soccer:leave")
 util.AddNetworkString("boat_soccer:switch_team")
 util.AddNetworkString("boat_soccer:start_game")
+util.AddNetworkString("boat_soccer:force_leave")
 
 -- Functions
 function boat_soccer.UpdateControllerClient(ply)
@@ -18,6 +19,11 @@ function boat_soccer.UpdateControllerClient(ply)
     else
         net.Send(ply)
     end
+end
+
+function boat_soccer.ForceLeave(ply)
+    net.Start("boat_soccer:force_leave")
+    net.Send(ply)
 end
 
 function boat_soccer.OpenMenu(ply, id)

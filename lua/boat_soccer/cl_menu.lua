@@ -1,4 +1,6 @@
 -- Menu derma handler
+include("sh_init.lua")
+
 -- Local functions
 local function RefreshList(players, playerList0, playerList1)
     playerList0:Clear()
@@ -19,12 +21,6 @@ local function RefreshList(players, playerList0, playerList1)
     end
 end
 
-local function CreateButtons(frame, joined, matchAdmin)
-    
-
-    return switchTeamButton, startGameButton
-end
-
 -- API functions
 function boat_soccer_client.OpenMenu(id, matchAdmin)
     local frame = vgui.Create("DFrame")
@@ -39,13 +35,13 @@ function boat_soccer_client.OpenMenu(id, matchAdmin)
     playerList0:SetSize(145, 270)
     playerList0:SetPos(5, 25)
     playerList0:SetPaintBackground(true)
-    playerList0:SetBackgroundColor(Color(207, 147, 147))
+    playerList0:SetBackgroundColor(boat_soccer_config.team0)
 
     local playerList1 = vgui.Create("DListLayout", frame)
     playerList1:SetSize(145, 270)
     playerList1:SetPos(155, 25)
     playerList1:SetPaintBackground(true)
-    playerList1:SetBackgroundColor(Color(159, 183, 218))
+    playerList1:SetBackgroundColor(boat_soccer_config.team1)
 
     RefreshList(boat_soccer_client.controllers[id].players, playerList0, playerList1)
 

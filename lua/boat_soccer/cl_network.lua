@@ -9,3 +9,8 @@ net.Receive("boat_soccer:open_menu", function()
     local id = net.ReadInt(8)
     boat_soccer_client.OpenMenu(id, boat_soccer_client.IsMatchAdmin(id))
 end )
+
+net.Receive("boat_soccer:force_leave", function()
+    boat_soccer_client.joined = false
+    print("Left")
+end )
