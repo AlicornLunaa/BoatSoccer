@@ -3,6 +3,16 @@ AddCSLuaFile( "shared.lua" )
 include("shared.lua")
 include("boat_soccer/sh_init.lua")
 
+local function SpawnGoal(pos, ang, color)
+    local e = ents.Create("bs_goal")
+    e:SetPos(pos)
+    e:SetAngles(ang)
+    e:SetColor(color)
+    e:Spawn()
+
+    return e
+end
+
 function ENT:Initialize()
     -- Initialize entities
     self:SetModel("models/props_c17/FurnitureWashingmachine001a.mdl")
@@ -12,16 +22,13 @@ function ENT:Initialize()
     self:SetUseType(SIMPLE_USE)
 
     -- Initialize members
-    self.goal0 = nil
-    self.goal1 = nil
+    self.goal0 = SpawnGoal(self:LocalToWorld(Vector(0, 100, 0)), self:LocalToWorldAngles(Angle(0, 270, 0)), boat_soccer_config.team0)
+    self.goal1 = SpawnGoal(self:LocalToWorld(Vector(0, -100, 0)), self:LocalToWorldAngles(Angle(0, 90, 0)), boat_soccer_config.team1)
     self.spawnedBoats = {}
     boat_soccer.controllers[self:EntIndex()] = {}
     boat_soccer.controllers[self:EntIndex()].entity = self
     boat_soccer.controllers[self:EntIndex()].players = {}
     boat_soccer.UpdateControllerClient()
-
-    -- Create goals
-    --self.goal0 = ents.Create("")
 
     -- Physics initialization
     local phys = self:GetPhysicsObject()
@@ -58,8 +65,8 @@ function ENT:OnRemove()
         v:Remove()
     end
 
-    goal0:Remove()
-    goal1:Remove()
+    if (self.goal0 and self.goal0:IsValid()) then self.goal0:Remove() end
+    if (self.goal1 and self.goal1:IsValid()) then self.goal1:Remove() end
 
     boat_soccer.controllers[self:EntIndex()] = nil
 end
