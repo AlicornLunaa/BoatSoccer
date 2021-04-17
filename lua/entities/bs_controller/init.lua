@@ -22,8 +22,8 @@ function ENT:Initialize()
     self:SetUseType(SIMPLE_USE)
 
     -- Initialize members
-    self.goal0 = SpawnGoal(self:LocalToWorld(Vector(0, 100, 0)), self:LocalToWorldAngles(Angle(0, 270, 0)), boat_soccer_config.team0)
-    self.goal1 = SpawnGoal(self:LocalToWorld(Vector(0, -100, 0)), self:LocalToWorldAngles(Angle(0, 90, 0)), boat_soccer_config.team1)
+    self.goal0 = SpawnGoal(self:LocalToWorld(Vector(0, -100, 0)), self:LocalToWorldAngles(Angle(0, 90, 0)), boat_soccer_config.team0)
+    self.goal1 = SpawnGoal(self:LocalToWorld(Vector(0, 100, 0)), self:LocalToWorldAngles(Angle(0, 270, 0)), boat_soccer_config.team1)
     self.spawnedBoats = {}
     boat_soccer.controllers[self:EntIndex()] = {}
     boat_soccer.controllers[self:EntIndex()].entity = self
