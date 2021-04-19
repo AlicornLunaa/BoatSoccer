@@ -6,10 +6,6 @@ boat_soccer_client.joined = false
 include("cl_network.lua")
 include("cl_menu.lua")
 
-concommand.Add("bs_open_menu", function()
-    boat_soccer_client.OpenMenu()
-end )
-
 -- Functions
 function boat_soccer_client.IsMatchAdmin(id)
     if (boat_soccer_client.controllers[id].players[LocalPlayer():SteamID64()] == nil) then
