@@ -85,13 +85,13 @@ function boat_soccer_client.OpenMenu(id, matchAdmin)
         else
             RefreshList(boat_soccer_client.controllers[id].players, playerList0, playerList1)
 
-            if (boat_soccer_client.joined) then
+            if (boat_soccer_client.joined and boat_soccer_client.controllers[id].gameStarted == false) then
                 switchTeamButton:Show()
             else
                 switchTeamButton:Hide()
             end
 
-            if (boat_soccer_client.IsMatchAdmin(id)) then
+            if (boat_soccer_client.IsMatchAdmin(id) and boat_soccer_client.controllers[id].gameStarted == false) then
                 startGameButton:Show()
             else
                 startGameButton:Hide()

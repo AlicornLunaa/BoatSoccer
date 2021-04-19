@@ -55,6 +55,8 @@ function ENT:Initialize()
         phys:SetMass(100)
         phys:Wake()
     end
+
+    self:Activate()
 end
 
 function ENT:Use( activator )

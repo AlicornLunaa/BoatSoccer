@@ -33,17 +33,16 @@ function ENT:Initialize()
     self:SetUseType(SIMPLE_USE)
 
     -- Initialize members
-    self.goal0 = SpawnGoal(self:GetPos(), self:GetAngles())
-    self.goal1 = SpawnGoal(self:GetPos(), self:LocalToWorldAngles(Angle(0, 180, 0)))
+    self.goal0 = nil
+    self.goal1 = nil
     self.bs_ball = nil
     self.spawnedBoats = {}
     boat_soccer.controllers[self:EntIndex()] = {}
     boat_soccer.controllers[self:EntIndex()].entity = self
     boat_soccer.controllers[self:EntIndex()].players = {}
+    boat_soccer.controllers[self:EntIndex()].gameStarted = false
 
-    constraint.NoCollide(self, self.goal0, 0, 0)
-    constraint.NoCollide(self, self.goal1, 0, 0)
-
+    -- Phys init
     local phys = self:GetPhysicsObject()
     if (phys:IsValid()) then
         phys:SetMass(1000)
@@ -59,13 +58,17 @@ end
 
 function ENT:Think()
     -- Keep goals in position
-    self.goal0:SetPos(self:GetPos())
-    self.goal0:SetAngles(self:GetAngles())
-    self.goal0:GetPhysicsObject():EnableMotion(false)
+    if (self.goal0 and self.goal0:IsValid()) then
+        self.goal0:SetPos(self:GetPos())
+        self.goal0:SetAngles(self:GetAngles())
+        self.goal0:GetPhysicsObject():EnableMotion(false)
+    end
 
-    self.goal1:SetPos(self:LocalToWorld(Vector(0, 0, 0)))
-    self.goal1:SetAngles(self:LocalToWorldAngles(Angle(0, 180, 0)))
-    self.goal1:GetPhysicsObject():EnableMotion(false)
+    if (self.goal1 and self.goal1:IsValid()) then
+        self.goal1:SetPos(self:LocalToWorld(Vector(0, 0, 0)))
+        self.goal1:SetAngles(self:LocalToWorldAngles(Angle(0, 180, 0)))
+        self.goal1:GetPhysicsObject():EnableMotion(false)
+    end
 
     -- Update entity client
     boat_soccer.UpdateControllerClient()
@@ -99,7 +102,13 @@ end
 -- Game specific functions
 function ENT:StartGame()
     -- Spawn ball
+    boat_soccer.controllers[self:EntIndex()].gameStarted = true
+    self.goal0 = SpawnGoal(self:GetPos(), self:GetAngles())
+    self.goal1 = SpawnGoal(self:GetPos(), self:LocalToWorldAngles(Angle(0, 180, 0)))
     self.bs_ball = SpawnBall(self:LocalToWorld(Vector(0, 0, 80)))
+
+    constraint.NoCollide(self, self.goal0, 0, 0)
+    constraint.NoCollide(self, self.goal1, 0, 0)
 
     -- Spawn boats for each player on each team
     spawn0 = 1
