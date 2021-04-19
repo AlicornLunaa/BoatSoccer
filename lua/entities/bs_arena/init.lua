@@ -16,6 +16,15 @@ local function SpawnGoal(pos, ang)
     return e
 end
 
+local function SpawnBall(pos)
+    local e = ents.Create("bs_ball")
+    e:SetPos(pos)
+    e:Spawn()
+    e:GetPhysicsObject():EnableMotion(false)
+
+    return e
+end
+
 function ENT:Initialize()
     self:SetModel("models/boat_soccer/arena.mdl")
     self:PhysicsInit(SOLID_VPHYSICS)
@@ -89,6 +98,9 @@ end
 
 -- Game specific functions
 function ENT:StartGame()
+    -- Spawn ball
+    self.bs_ball = SpawnBall(self:LocalToWorld(Vector(0, 0, 80)))
+
     -- Spawn boats for each player on each team
     spawn0 = 1
     spawn1 = 1
