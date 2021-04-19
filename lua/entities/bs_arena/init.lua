@@ -37,10 +37,16 @@ function ENT:Initialize()
     self.goal1 = nil
     self.bs_ball = nil
     self.spawnedBoats = {}
+    self.round = 1
+    self.resetting = false
     boat_soccer.controllers[self:EntIndex()] = {}
     boat_soccer.controllers[self:EntIndex()].entity = self
     boat_soccer.controllers[self:EntIndex()].players = {}
     boat_soccer.controllers[self:EntIndex()].gameStarted = false
+
+    -- Networked variables
+    self:SetNWInt("score0", 0)
+    self:SetNWInt("score1", 0)
 
     -- Phys init
     local phys = self:GetPhysicsObject()
@@ -110,9 +116,36 @@ function ENT:StartGame()
     constraint.NoCollide(self, self.goal0, 0, 0)
     constraint.NoCollide(self, self.goal1, 0, 0)
 
+    -- Callbacks for goals
+    self.goal0:AddCallback("PhysicsCollide", function(e, data)
+        if (data.HitEntity == self.bs_ball and !self.resetting) then
+            self.resetting = true
+            self:SetNWInt("score1", self:GetNWInt("score1", 0) + 1)
+
+            self.bs_ball:GetPhysicsObject():EnableMotion(false)
+
+            timer.Simple(2, function()
+                self:ResetRound()
+            end )
+        end
+    end )
+
+    self.goal1:AddCallback("PhysicsCollide", function(e, data)
+        if (data.HitEntity == self.bs_ball and !self.resetting) then
+            self.resetting = true
+            self:SetNWInt("score0", self:GetNWInt("score0", 0) + 1)
+
+            self.bs_ball:GetPhysicsObject():EnableMotion(false)
+
+            timer.Simple(2, function()
+                self:ResetRound()
+            end )
+        end
+    end )
+
     -- Spawn boats for each player on each team
-    spawn0 = 1
-    spawn1 = 1
+    local spawn0 = 1
+    local spawn1 = 1
     for k, v in pairs(boat_soccer.controllers[self:EntIndex()].players) do
         boat_soccer.CloseDerma(player.GetBySteamID64(k))
 
@@ -141,6 +174,65 @@ function ENT:StartGame()
         self.spawnedBoats[#self.spawnedBoats]:SetColor(color)
         self.spawnedBoats[#self.spawnedBoats]:Spawn()
         self.spawnedBoats[#self.spawnedBoats]:GetPhysicsObject():EnableMotion(false)
+        self.spawnedBoats[#self.spawnedBoats]:BSSetTeam(v.team)
         self.spawnedBoats[#self.spawnedBoats]:Use(player.GetBySteamID64(k))
     end
+
+    timer.Simple(5, function()
+        if (!self:IsValid()) then return end
+
+        self.bs_ball:GetPhysicsObject():EnableMotion(true)
+        self.bs_ball:PhysWake()
+
+        for k, v in pairs(self.spawnedBoats) do
+            v:GetPhysicsObject():EnableMotion(true)
+            v:PhysWake()
+        end
+    end )
+end
+
+function ENT:ResetRound()
+    -- Resets the position of everything
+    self.round = self.round + 1
+    self.bs_ball:GetPhysicsObject():EnableMotion(false)
+    self.bs_ball:SetPos(self:LocalToWorld(Vector(0, 0, 80)))
+
+    -- Spawn boats for each player on each team
+    local spawn0 = 1
+    local spawn1 = 1
+    for k, v in pairs(self.spawnedBoats) do
+        local pos
+        local ang
+        if (v.team == 0) then
+            pos = self:LocalToWorld(boat_soccer_config.team0_spawns[spawn0])
+            ang = self:LocalToWorldAngles(Angle(0, 0, 0))
+
+            spawn0 = spawn0 + 1
+            if (spawn0 > 5) then spawn0 = 1 end
+        else
+            pos = self:LocalToWorld(boat_soccer_config.team1_spawns[spawn1])
+            ang = self:LocalToWorldAngles(Angle(0, 180, 0))
+
+            spawn1 = spawn1 + 1
+            if (spawn1 > 5) then spawn1 = 1 end
+        end
+
+        v:SetPos(pos)
+        v:SetAngles(ang)
+        v:GetPhysicsObject():EnableMotion(false)
+    end
+
+    timer.Simple(5, function()
+        if (!self:IsValid()) then return end
+
+        self.resetting = false
+
+        self.bs_ball:GetPhysicsObject():EnableMotion(true)
+        self.bs_ball:PhysWake()
+
+        for k, v in pairs(self.spawnedBoats) do
+            v:GetPhysicsObject():EnableMotion(true)
+            v:PhysWake()
+        end
+    end )
 end

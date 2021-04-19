@@ -48,6 +48,7 @@ function ENT:Initialize()
     self.driver = nil
     self.speed = 1000
     self.turnSpeed = 1
+    self.team = -1
 
     -- Start physics
     local phys = self:GetPhysicsObject()
@@ -93,7 +94,6 @@ function ENT:Think()
             end
 
             if (self.driver:KeyDown(IN_MOVELEFT)) then
-                print("A")
                 phys:ApplyForceCenter(self:GetRight() * -self.speed)
             end
 
@@ -123,4 +123,8 @@ function ENT:OnRemove()
     if (self.driver != nil) then
         self:ExitBoat(self.driver)
     end
+end
+
+function ENT:BSSetTeam(team)
+    self.team = team
 end

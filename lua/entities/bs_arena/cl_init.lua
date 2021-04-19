@@ -1,11 +1,11 @@
 include("shared.lua")
 include("boat_soccer/sh_init.lua")
 
-local function DrawScoreboard(pos, ang, scale, players)
+local function DrawScoreboard(pos, ang, scale, players, score0)
     cam.Start3D2D(pos, ang, scale)
         -- Title
         draw.RoundedBox(1, -100, -80, 200, 15, boat_soccer_config.neutral)
-        draw.DrawText("Boat Soccer", "Trebuchet18", 0, -80, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
+        draw.DrawText("Boat Soccer " .. score0, "Trebuchet18", 0, -80, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
 
         -- Backgrounds
         draw.RoundedBox(0, -100, -65, 100, 85, boat_soccer_config.team0)
@@ -35,6 +35,6 @@ function ENT:Draw()
     local ang = self:LocalToWorldAngles(Angle(0, worldAng.y, 90))
 
     if (boat_soccer_client.controllers[self:EntIndex()] != nil) then
-        DrawScoreboard(pos, ang, 0.5, boat_soccer_client.controllers[self:EntIndex()].players)
+        DrawScoreboard(pos, ang, 0.5, boat_soccer_client.controllers[self:EntIndex()].players, self:GetNWInt("score0", 0))
     end
 end
