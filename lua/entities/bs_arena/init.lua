@@ -193,6 +193,7 @@ end
 
 function ENT:ResetRound()
     -- Resets the position of everything
+    if (self:CheckScore()) then return end
     self.round = self.round + 1
     self.bs_ball:GetPhysicsObject():EnableMotion(false)
     self.bs_ball:SetPos(self:LocalToWorld(Vector(0, 0, 80)))
@@ -235,4 +236,53 @@ function ENT:ResetRound()
             v:PhysWake()
         end
     end )
+end
+
+function ENT:CheckScore()
+    -- Checks score to see if anyone has won
+    if (self:GetNWInt("score0", 0) >= boat_soccer_config.winningScore) then
+        -- Team 0 has won
+        print("Red team won!")
+        self:EndGame()
+
+        return true
+    elseif (self:GetNWInt("score1", 0) >= boat_soccer_config.winningScore) then
+        -- Team 1 has won
+        print("Blue team won!")
+        self:EndGame()
+
+        return true
+    end
+
+    return false
+end
+
+function ENT:EndGame()
+    -- Ends the game without actually removing the entity
+    boat_soccer.controllers[self:EntIndex()].gameStarted = false
+    self.round = 1
+    self.resetting = false
+
+    self:SetNWInt("score0", 0)
+    self:SetNWInt("score1", 0)
+
+    -- Force every player to leave
+    for k, v in pairs(boat_soccer.controllers[self:EntIndex()].players) do
+        if (player.GetBySteamID64(k)) then continue end
+
+        boat_soccer.ForceLeave(player.GetBySteamID64(k))
+        boat_soccer.CloseDerma(player.GetBySteamID64(k))
+    end
+
+    -- Delete every boat
+    for k, v in pairs(self.spawnedBoats) do
+        v:Remove()
+    end
+
+    self.spawnedBoats = {}
+
+    -- Remove goals and ball
+    if (self.goal0 and self.goal0:IsValid()) then self.goal0:Remove() end
+    if (self.goal1 and self.goal1:IsValid()) then self.goal1:Remove() end
+    if (self.bs_ball and self.bs_ball:IsValid()) then self.bs_ball:Remove() end
 end
