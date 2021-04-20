@@ -36,7 +36,7 @@ function boat_soccer_client.IsMatchAdmin(id)
 end
 
 function boat_soccer_client.Join(id)
-    boat_soccer_client.joined = true
+    boat_soccer_client.joined = id
 
     net.Start("boat_soccer:join")
         net.WriteInt(id, 8)

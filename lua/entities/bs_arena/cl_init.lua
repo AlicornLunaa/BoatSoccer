@@ -58,20 +58,23 @@ function ENT:Draw()
     print(self:GetNWInt("round", 1) .. " " .. self.lastRound)
 
     if (boat_soccer_client.controllers[self:EntIndex()] != nil and boat_soccer_client.controllers[self:EntIndex()] != false) then
-        -- Check if the game started to start a countdown
-        if ((boat_soccer_client.controllers[self:EntIndex()].gameStarted != self.lastGameStarted and self.lastGameStarted == false) or (self:GetNWInt("round", 1) != self.lastRound and boat_soccer_client.controllers[self:EntIndex()].gameStarted == true)) then
-            self.lastGameStarted = boat_soccer_client.controllers[self:EntIndex()].gameStarted
-            self.lastRound = self:GetNWInt("round", 1)
-            self.time = 5
-
-            for i=1,5 do
-                timer.Simple(i, function()
-                    self.time = self.time - 1
-                end )
-            end
-        end
-
         DrawScoreboard(pos, ang, 0.5, boat_soccer_client.controllers[self:EntIndex()].players, self:GetNWInt("score0", 0))
-        DrawHUD(self.time)
+
+        if (boat_soccer_client.joined != false) then
+            -- Check if the game started to start a countdown
+            if ((boat_soccer_client.controllers[self:EntIndex()].gameStarted != self.lastGameStarted and self.lastGameStarted == false) or (self:GetNWInt("round", 1) != self.lastRound and boat_soccer_client.controllers[self:EntIndex()].gameStarted == true)) then
+                self.lastGameStarted = boat_soccer_client.controllers[self:EntIndex()].gameStarted
+                self.lastRound = self:GetNWInt("round", 1)
+                self.time = 5
+
+                for i=1,5 do
+                    timer.Simple(i, function()
+                        self.time = self.time - 1
+                    end )
+                end
+            end
+
+            DrawHUD(self.time)
+        end
     end
 end

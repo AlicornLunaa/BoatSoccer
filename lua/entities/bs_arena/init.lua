@@ -57,7 +57,7 @@ function ENT:Initialize()
 end
 
 function ENT:Use( activator, caller )
-    if (activator:IsValid() and activator:IsPlayer()) then
+    if (activator:IsValid() and activator:IsPlayer() and !boat_soccer.controllers[self:EntIndex()].gameStarted) then
         boat_soccer.OpenMenu(activator, self:EntIndex())
     end
 end
