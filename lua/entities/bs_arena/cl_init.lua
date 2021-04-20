@@ -25,6 +25,28 @@ local function DrawScoreboard(pos, ang, scale, players, score0)
     cam.End3D2D()
 end
 
+local function DrawHUD(time)
+    local oldW, oldH = ScrW(), ScrH()
+    render.SetViewPort(100, 100, 500, 500)
+
+    cam.Start2D()
+        if (time != 6 and time != 0) then
+            surface.SetFont("bs_font_hud")
+            surface.SetTextColor(255, 255, 255)
+            surface.SetTextPos(100, 100)
+            surface.DrawText(tostring(time))
+        end
+    cam.End2D()
+
+    render.SetViewPort(0, 0, oldW, oldH)
+end
+
+function ENT:Initialize()
+    self.time = 6
+    self.lastGameStarted = false
+    self.lastRound = self:GetNWInt("round", 1)
+end
+
 function ENT:Draw()
     self:DrawModel()
 
@@ -33,8 +55,23 @@ function ENT:Draw()
     local toPlayer = pos - LocalPlayer():GetPos()
     local worldAng = self:WorldToLocalAngles(Angle(0, -math.deg(math.atan2(toPlayer.x, toPlayer.y)), 0))
     local ang = self:LocalToWorldAngles(Angle(0, worldAng.y, 90))
+    print(self:GetNWInt("round", 1) .. " " .. self.lastRound)
 
     if (boat_soccer_client.controllers[self:EntIndex()] != nil and boat_soccer_client.controllers[self:EntIndex()] != false) then
+        -- Check if the game started to start a countdown
+        if ((boat_soccer_client.controllers[self:EntIndex()].gameStarted != self.lastGameStarted and self.lastGameStarted == false) or (self:GetNWInt("round", 1) != self.lastRound and boat_soccer_client.controllers[self:EntIndex()].gameStarted == true)) then
+            self.lastGameStarted = boat_soccer_client.controllers[self:EntIndex()].gameStarted
+            self.lastRound = self:GetNWInt("round", 1)
+            self.time = 5
+
+            for i=1,5 do
+                timer.Simple(i, function()
+                    self.time = self.time - 1
+                end )
+            end
+        end
+
         DrawScoreboard(pos, ang, 0.5, boat_soccer_client.controllers[self:EntIndex()].players, self:GetNWInt("score0", 0))
+        DrawHUD(self.time)
     end
 end

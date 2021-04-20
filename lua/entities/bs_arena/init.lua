@@ -37,7 +37,6 @@ function ENT:Initialize()
     self.goal1 = nil
     self.bs_ball = nil
     self.spawnedBoats = {}
-    self.round = 1
     self.resetting = false
     boat_soccer.controllers[self:EntIndex()] = {}
     boat_soccer.controllers[self:EntIndex()].entity = self
@@ -47,6 +46,7 @@ function ENT:Initialize()
     -- Networked variables
     self:SetNWInt("score0", 0)
     self:SetNWInt("score1", 0)
+    self:SetNWInt("round", 1)
 
     -- Phys init
     local phys = self:GetPhysicsObject()
@@ -198,7 +198,7 @@ end
 function ENT:ResetRound()
     -- Resets the position of everything
     if (self:CheckScore()) then return end
-    self.round = self.round + 1
+    self:SetNWInt("round", self:GetNWInt("round", 1) + 1)
     self.bs_ball:GetPhysicsObject():EnableMotion(false)
     self.bs_ball:SetPos(self:LocalToWorld(Vector(0, 0, 80)))
 
@@ -264,7 +264,7 @@ end
 function ENT:EndGame()
     -- Ends the game without actually removing the entity
     boat_soccer.controllers[self:EntIndex()].gameStarted = false
-    self.round = 1
+    self:SetNWInt("round", 1)
     self.resetting = false
 
     self:SetNWInt("score0", 0)

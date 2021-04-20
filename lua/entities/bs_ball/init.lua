@@ -24,7 +24,6 @@ end
 
 function ENT:PhysicsCollide(data, phys)
     -- Set color of the ball to the last team who touched it
-    print(self.trailEnt)
     if (data.HitEntity.ClassName == "bs_boat") then
         local team = data.HitEntity.team
 
