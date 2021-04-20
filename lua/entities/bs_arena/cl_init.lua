@@ -16,9 +16,9 @@ local function DrawScoreboard(pos, ang, scale, players, score0)
         line = 0
         for k, v in pairs(players) do
             if (v.team == 0) then
-                draw.DrawText(v.name, "Trebuchet16", -98, -68 + line, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT)
+                draw.DrawText(v.name, "bs_font_hud_text", -98, -68 + line, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT)
             else
-                draw.DrawText(v.name, "Trebuchet16", 2, -68 + line, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT)
+                draw.DrawText(v.name, "bs_font_hud_text", 2, -68 + line, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT)
             end
             line = line + 8
         end

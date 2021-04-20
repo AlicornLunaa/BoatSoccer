@@ -44,6 +44,24 @@ surface.CreateFont("bs_font_hud_small", {
     outline = false
 })
 
+surface.CreateFont("bs_font_hud_text", {
+    font = "trebuchet",
+    extended = false,
+    size = 16,
+    weight = 500,
+    blursize = 0,
+    scanlines = 0,
+    antialias = true,
+    underline = false,
+    italic = false,
+    strikeout = false,
+    symbol = false,
+    rotary = false,
+    shadow = false,
+    additive = false,
+    outline = false
+})
+
 -- Functions
 function boat_soccer_client.IsMatchAdmin(id)
     if (boat_soccer_client.controllers[id].players[LocalPlayer():SteamID64()] == nil) then
