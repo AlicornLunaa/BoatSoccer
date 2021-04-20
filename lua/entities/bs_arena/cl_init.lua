@@ -34,7 +34,7 @@ function ENT:Draw()
     local worldAng = self:WorldToLocalAngles(Angle(0, -math.deg(math.atan2(toPlayer.x, toPlayer.y)), 0))
     local ang = self:LocalToWorldAngles(Angle(0, worldAng.y, 90))
 
-    if (boat_soccer_client.controllers[self:EntIndex()] != nil) then
+    if (boat_soccer_client.controllers[self:EntIndex()] != nil and boat_soccer_client.controllers[self:EntIndex()] != false) then
         DrawScoreboard(pos, ang, 0.5, boat_soccer_client.controllers[self:EntIndex()].players, self:GetNWInt("score0", 0))
     end
 end

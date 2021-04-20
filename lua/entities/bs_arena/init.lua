@@ -88,7 +88,7 @@ function ENT:OnRemove()
     -- Cleanup
     -- Force every player to leave
     for k, v in pairs(boat_soccer.controllers[self:EntIndex()].players) do
-        if (player.GetBySteamID64(k)) then continue end
+        if (!player.GetBySteamID64(k)) then continue end
 
         boat_soccer.ForceLeave(player.GetBySteamID64(k))
         boat_soccer.CloseDerma(player.GetBySteamID64(k))
@@ -103,6 +103,10 @@ function ENT:OnRemove()
     if (self.goal0 and self.goal0:IsValid()) then self.goal0:Remove() end
     if (self.goal1 and self.goal1:IsValid()) then self.goal1:Remove() end
     if (self.bs_ball and self.bs_ball:IsValid()) then self.bs_ball:Remove() end
+
+    -- Remove controller input
+    boat_soccer.controllers[self:EntIndex()] = false
+    boat_soccer.UpdateControllerClient()
 end
 
 -- Game specific functions

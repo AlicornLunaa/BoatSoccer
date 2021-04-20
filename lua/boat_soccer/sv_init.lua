@@ -4,6 +4,10 @@ boat_soccer.controllers = {}
 
 include("sv_network.lua")
 
+concommand.Add("bs_debug", function()
+    PrintTable(boat_soccer)
+end )
+
 -- Functions
 function boat_soccer.AddPlayer(ply, id)
     -- Adds player to the controller with that id
