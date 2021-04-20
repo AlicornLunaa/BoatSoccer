@@ -13,14 +13,16 @@ local function DrawScoreboard(pos, ang, scale, players, score0)
         draw.RoundedBox(0, -100, 20, 200, 15, boat_soccer_config.neutral)
 
         -- Player list
-        line = 0
+        line0 = 0
+        line1 = 0
         for k, v in pairs(players) do
             if (v.team == 0) then
-                draw.DrawText(v.name, "bs_font_hud_text", -98, -68 + line, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT)
+                draw.DrawText(v.name, "bs_font_hud_text", -98, -68 + line0, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT)
+                line0 = line0 + 12
             else
-                draw.DrawText(v.name, "bs_font_hud_text", 2, -68 + line, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT)
+                draw.DrawText(v.name, "bs_font_hud_text", 2, -68 + line1, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT)
+                line1 = line1 + 12
             end
-            line = line + 8
         end
     cam.End3D2D()
 end
