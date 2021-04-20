@@ -25,20 +25,46 @@ local function DrawScoreboard(pos, ang, scale, players, score0)
     cam.End3D2D()
 end
 
-local function DrawHUD(time)
+local function DrawHUD(time, winner)
+    local out = false
     local oldW, oldH = ScrW(), ScrH()
-    render.SetViewPort(oldW / 2 - 150, 100, 500, 500)
+    render.SetViewPort(oldW / 2 - 250, 100, 500, 500)
 
     cam.Start2D()
         if (time != 6 and time != 0) then
-            surface.SetFont("bs_font_hud")
+            draw.RoundedBox(20, 190, 110, 112, 175, boat_soccer_config.neutral)
+
+            surface.SetFont("bs_font_hud_large")
             surface.SetTextColor(255, 255, 255)
-            surface.SetTextPos(100, 100)
+            surface.SetTextPos(197, 100)
             surface.DrawText(tostring(time))
+        end
+
+        if (winner != -1) then
+            surface.SetFont("bs_font_hud_small")
+
+            if (winner == 0) then
+                -- Red wins
+                draw.RoundedBox(20, 75, 88, 342, 75, boat_soccer_config.neutral)
+                surface.SetTextPos(95, 100)
+                surface.SetTextColor(boat_soccer_config.team0)
+                surface.DrawText("Red team wins!")
+
+                out = true
+            else
+                -- Blue wins
+                draw.RoundedBox(20, 75, 88, 342, 75, boat_soccer_config.neutral)
+                surface.SetTextPos(90, 100)
+                surface.SetTextColor(boat_soccer_config.team1)
+                surface.DrawText("Blue team wins!")
+
+                out = true
+            end
         end
     cam.End2D()
 
     render.SetViewPort(0, 0, oldW, oldH)
+    return out
 end
 
 function ENT:Initialize()
@@ -55,7 +81,6 @@ function ENT:Draw()
     local toPlayer = pos - LocalPlayer():GetPos()
     local worldAng = self:WorldToLocalAngles(Angle(0, -math.deg(math.atan2(toPlayer.x, toPlayer.y)), 0))
     local ang = self:LocalToWorldAngles(Angle(0, worldAng.y, 90))
-    print(self:GetNWInt("round", 1) .. " " .. self.lastRound)
 
     if (boat_soccer_client.controllers[self:EntIndex()] != nil and boat_soccer_client.controllers[self:EntIndex()] != false) then
         DrawScoreboard(pos, ang, 0.5, boat_soccer_client.controllers[self:EntIndex()].players, self:GetNWInt("score0", 0))
@@ -74,7 +99,10 @@ function ENT:Draw()
                 end
             end
 
-            DrawHUD(self.time)
+            if (DrawHUD(self.time, self:GetNWInt("winner", -1))) then
+                -- Reset game
+                self.lastGameStarted = false
+            end
         end
     end
 end
