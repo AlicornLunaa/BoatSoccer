@@ -11,6 +11,9 @@ function ENT:Initialize()
 
     self.bs_buoyancy = 2
 
+    self:SetNWInt("team", -1)
+    self.trailEnt = util.SpriteTrail(self, 0, Color(10, 10, 10), false, 15, 1, 1 / 2, 1 / 32, "trails/plasma")
+
     local phys = self:GetPhysicsObject()
     if (phys:IsValid()) then
         phys:SetMass(50)
@@ -21,13 +24,18 @@ end
 
 function ENT:PhysicsCollide(data, phys)
     -- Set color of the ball to the last team who touched it
+    print(self.trailEnt)
     if (data.HitEntity.ClassName == "bs_boat") then
         local team = data.HitEntity.team
 
         if (team == 0) then
+            self.trailEnt:SetKeyValue("rendercolor", string.format("%d %d %d", boat_soccer_config.team0.r, boat_soccer_config.team0.g, boat_soccer_config.team0.b))
             self:SetColor(boat_soccer_config.team0)
+            self:SetNWInt("team", 0)
         else
+            self.trailEnt:SetKeyValue("rendercolor", string.format("%d %d %d", boat_soccer_config.team1.r, boat_soccer_config.team1.g, boat_soccer_config.team1.b))
             self:SetColor(boat_soccer_config.team1)
+            self:SetNWInt("team", 1)
         end
     end
 end
