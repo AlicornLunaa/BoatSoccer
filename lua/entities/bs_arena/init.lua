@@ -125,7 +125,7 @@ function ENT:StartGame()
     self.goal0:AddCallback("PhysicsCollide", function(e, data)
         if (data.HitEntity == self.bs_ball and !self.resetting) then
             self.resetting = true
-            self:SetNWInt("score1", self:GetNWInt("score1", 0) + 1)
+            self:SetNWInt("score0", self:GetNWInt("score0", 0) + 1)
 
             self.bs_ball:GetPhysicsObject():EnableMotion(false)
 
@@ -138,7 +138,7 @@ function ENT:StartGame()
     self.goal1:AddCallback("PhysicsCollide", function(e, data)
         if (data.HitEntity == self.bs_ball and !self.resetting) then
             self.resetting = true
-            self:SetNWInt("score0", self:GetNWInt("score0", 0) + 1)
+            self:SetNWInt("score1", self:GetNWInt("score1", 0) + 1)
 
             self.bs_ball:GetPhysicsObject():EnableMotion(false)
 
