@@ -43,6 +43,12 @@ function ENT:Use( activator, caller )
     return
 end
 
+function ENT:ResetBall()
+    self.trailEnt:SetKeyValue("rendercolor", "10 10 10")
+    self:SetColor(Color(255, 255, 255))
+    self:SetNWInt("team", -1)
+end
+
 -- Hooks
 local function FixBuoyancy(_, ent)
     if (ent:IsValid() and ent.bs_buoyancy) then

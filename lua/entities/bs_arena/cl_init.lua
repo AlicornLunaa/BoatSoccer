@@ -27,7 +27,7 @@ end
 
 local function DrawHUD(time)
     local oldW, oldH = ScrW(), ScrH()
-    render.SetViewPort(100, 100, 500, 500)
+    render.SetViewPort(oldW / 2 - 150, 100, 500, 500)
 
     cam.Start2D()
         if (time != 6 and time != 0) then

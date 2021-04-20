@@ -201,6 +201,7 @@ function ENT:ResetRound()
     self:SetNWInt("round", self:GetNWInt("round", 1) + 1)
     self.bs_ball:GetPhysicsObject():EnableMotion(false)
     self.bs_ball:SetPos(self:LocalToWorld(Vector(0, 0, 80)))
+    self.bs_ball:ResetBall()
 
     -- Spawn boats for each player on each team
     local spawn0 = 1
