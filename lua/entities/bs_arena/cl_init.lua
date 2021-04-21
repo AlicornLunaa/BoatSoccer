@@ -1,11 +1,15 @@
 include("shared.lua")
 include("boat_soccer/sh_init.lua")
 
-local function DrawScoreboard(pos, ang, scale, players, score0)
+local function DrawCentered(roundness, x, y, w, h, c)
+    draw.RoundedBox(roundness, x - w / 2, y - h / 2, w, h, c)
+end
+
+local function DrawScoreboard(pos, ang, scale, players, score0, score1)
     cam.Start3D2D(pos, ang, scale)
         -- Title
         draw.RoundedBox(1, -100, -80, 200, 15, boat_soccer_config.neutral)
-        draw.DrawText("Boat Soccer " .. score0, "Trebuchet18", 0, -80, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
+        draw.DrawText("Boat Soccer", "Trebuchet18", 0, -80, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
 
         -- Backgrounds
         draw.RoundedBox(0, -100, -65, 100, 85, boat_soccer_config.team0)
@@ -27,42 +31,41 @@ local function DrawScoreboard(pos, ang, scale, players, score0)
     cam.End3D2D()
 end
 
-local function DrawHUD(time, winner)
+local function DrawHUD(time, winner, score0, score1)
     local out = false
     local oldW, oldH = ScrW(), ScrH()
-    render.SetViewPort(oldW / 2 - 250, 100, 500, 500)
+    render.SetViewPort(oldW / 2 - 250, 0, 500, 500)
 
     cam.Start2D()
+        -- Draw 5 second counter
         if (time != 6 and time != 0) then
-            draw.RoundedBox(20, 190, 110, 112, 175, boat_soccer_config.neutral)
-
-            surface.SetFont("bs_font_hud_large")
-            surface.SetTextColor(255, 255, 255)
-            surface.SetTextPos(197, 100)
-            surface.DrawText(tostring(time))
+            draw.RoundedBox(20, 194, 110, 112, 175, boat_soccer_config.neutral)
+            draw.DrawText(tostring(time), "bs_font_hud_large", 250, 100, boat_soccer_config.text, TEXT_ALIGN_CENTER)
         end
 
+        -- Draw winning team
         if (winner != -1) then
             surface.SetFont("bs_font_hud_small")
 
             if (winner == 0) then
                 -- Red wins
-                draw.RoundedBox(20, 75, 88, 342, 75, boat_soccer_config.neutral)
-                surface.SetTextPos(95, 100)
-                surface.SetTextColor(boat_soccer_config.team0)
-                surface.DrawText("Red team wins!")
-
+                DrawCentered(20, 250, 125, 342, 75, boat_soccer_config.neutral)
+                draw.DrawText("Red team wins!", "bs_font_hud_small", 250, 105, boat_soccer_config.team0, TEXT_ALIGN_CENTER)
                 out = true
             else
                 -- Blue wins
-                draw.RoundedBox(20, 75, 88, 342, 75, boat_soccer_config.neutral)
-                surface.SetTextPos(90, 100)
-                surface.SetTextColor(boat_soccer_config.team1)
-                surface.DrawText("Blue team wins!")
+                DrawCentered(20, 250, 125, 342, 75, boat_soccer_config.neutral)
+                draw.DrawText("Blue team wins!", "bs_font_hud_small", 250, 105, boat_soccer_config.team1, TEXT_ALIGN_CENTER)
 
                 out = true
             end
         end
+
+        -- Draw top scoreboard
+        draw.RoundedBoxEx(10, 70, 0, 360, 55, boat_soccer_config.text, false, false, true, true)
+        draw.RoundedBoxEx(10, 75, 0, 350, 50, boat_soccer_config.neutral, false, false, true, true)
+        draw.DrawText(tostring(score0), "bs_font_hud_score", 100, -8, boat_soccer_config.team0, TEXT_ALIGN_TOP)
+        draw.DrawText(tostring(score1), "bs_font_hud_score", 370, -8, boat_soccer_config.team1, TEXT_ALIGN_TOP)
     cam.End2D()
 
     render.SetViewPort(0, 0, oldW, oldH)
@@ -85,11 +88,12 @@ function ENT:Draw()
     local ang = self:LocalToWorldAngles(Angle(0, worldAng.y, 90))
 
     if (boat_soccer_client.controllers[self:EntIndex()] != nil and boat_soccer_client.controllers[self:EntIndex()] != false) then
-        DrawScoreboard(pos, ang, 0.5, boat_soccer_client.controllers[self:EntIndex()].players, self:GetNWInt("score0", 0))
-
-        if (boat_soccer_client.joined != false) then
+        if (!boat_soccer_client.joined) then
+            DrawScoreboard(pos, ang, 0.5, boat_soccer_client.controllers[self:EntIndex()].players, self:GetNWInt("score0", 0))
+        else
             -- Check if the game started to start a countdown
-            if ((boat_soccer_client.controllers[self:EntIndex()].gameStarted != self.lastGameStarted and self.lastGameStarted == false) or (self:GetNWInt("round", 1) != self.lastRound and boat_soccer_client.controllers[self:EntIndex()].gameStarted == true)) then
+            if ((boat_soccer_client.controllers[self:EntIndex()].gameStarted != self.lastGameStarted and self.lastGameStarted == false) or
+                    (self:GetNWInt("round", 1) != self.lastRound and boat_soccer_client.controllers[self:EntIndex()].gameStarted == true)) then
                 self.lastGameStarted = boat_soccer_client.controllers[self:EntIndex()].gameStarted
                 self.lastRound = self:GetNWInt("round", 1)
                 self.time = 5
@@ -101,7 +105,7 @@ function ENT:Draw()
                 end
             end
 
-            if (DrawHUD(self.time, self:GetNWInt("winner", -1))) then
+            if (DrawHUD(self.time, self:GetNWInt("winner", -1), self:GetNWInt("score0", 0), self:GetNWInt("score1", 0))) then
                 -- Reset game
                 self.lastGameStarted = false
             end

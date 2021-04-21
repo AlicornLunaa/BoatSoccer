@@ -2,7 +2,7 @@
 boat_soccer_client = boat_soccer_client or {}
 boat_soccer_client.controllers = {}
 boat_soccer_client.balls = {}
-boat_soccer_client.joined = false
+boat_soccer_client.joined = true--false
 
 include("cl_network.lua")
 include("cl_menu.lua")
@@ -45,9 +45,27 @@ surface.CreateFont("bs_font_hud_small", {
 })
 
 surface.CreateFont("bs_font_hud_text", {
-    font = "trebuchet",
+    font = "Tahoma",
     extended = false,
     size = 16,
+    weight = 500,
+    blursize = 0,
+    scanlines = 0,
+    antialias = true,
+    underline = false,
+    italic = false,
+    strikeout = false,
+    symbol = false,
+    rotary = false,
+    shadow = false,
+    additive = false,
+    outline = false
+})
+
+surface.CreateFont("bs_font_hud_score", {
+    font = "Tahoma",
+    extended = false,
+    size = 60,
     weight = 500,
     blursize = 0,
     scanlines = 0,
