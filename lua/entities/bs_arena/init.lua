@@ -42,6 +42,7 @@ function ENT:Initialize()
     boat_soccer.controllers[self:EntIndex()].entity = self
     boat_soccer.controllers[self:EntIndex()].players = {}
     boat_soccer.controllers[self:EntIndex()].gameStarted = false
+    boat_soccer.controllers[self:EntIndex()].counting = false
 
     -- Networked variables
     self:SetNWInt("score0", 0)
@@ -49,7 +50,6 @@ function ENT:Initialize()
     self:SetNWInt("round", 1)
     self:SetNWInt("winner", -1)
     self:SetNWFloat("matchStartTime", SysTime())
-    self:SetNWBool("counting", true)
 
     -- Phys init
     local phys = self:GetPhysicsObject()
@@ -126,7 +126,8 @@ function ENT:StartGame()
     -- Callbacks for goals
     self.goal0:AddCallback("PhysicsCollide", function(e, data)
         if (data.HitEntity == self.bs_ball and !self.resetting) then
-            self:SetNWBool("counting", false)
+            boat_soccer.controllers[self:EntIndex()].counting = false
+
             self.resetting = true
             self:SetNWInt("score0", self:GetNWInt("score0", 0) + 1)
 
@@ -140,7 +141,8 @@ function ENT:StartGame()
 
     self.goal1:AddCallback("PhysicsCollide", function(e, data)
         if (data.HitEntity == self.bs_ball and !self.resetting) then
-            self:SetNWBool("counting", false)
+            boat_soccer.controllers[self:EntIndex()].counting = false
+
             self.resetting = true
             self:SetNWInt("score1", self:GetNWInt("score1", 0) + 1)
 
@@ -197,6 +199,8 @@ function ENT:StartGame()
             v:GetPhysicsObject():EnableMotion(true)
             v:PhysWake()
         end
+
+        boat_soccer.controllers[self:EntIndex()].counting = true
     end )
 end
 
@@ -245,6 +249,8 @@ function ENT:ResetRound()
             v:GetPhysicsObject():EnableMotion(true)
             v:PhysWake()
         end
+
+        boat_soccer.controllers[self:EntIndex()].counting = true
     end )
 end
 
@@ -271,6 +277,7 @@ end
 
 function ENT:EndGame()
     -- Ends the game without actually removing the entity
+    boat_soccer.controllers[self:EntIndex()].counting = false
     boat_soccer.controllers[self:EntIndex()].gameStarted = false
     self:SetNWInt("round", 1)
     self.resetting = false

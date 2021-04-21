@@ -84,10 +84,6 @@ end
 function ENT:Draw()
     self:DrawModel()
 
-    if (self:GetNWBool("counting")) then
-        self.currentTime = SysTime()
-    end
-
     local _, maxs = self:GetModelBounds()
     local pos = self:LocalToWorld(Vector(0, 0, maxs.z + 48))
     local toPlayer = pos - LocalPlayer():GetPos()
@@ -95,6 +91,10 @@ function ENT:Draw()
     local ang = self:LocalToWorldAngles(Angle(0, worldAng.y, 90))
 
     if (boat_soccer_client.controllers[self:EntIndex()] != nil and boat_soccer_client.controllers[self:EntIndex()] != false) then
+        if (boat_soccer_client.controllers[self:EntIndex()].counting) then
+            self.currentTime = SysTime()
+        end
+
         if (!boat_soccer_client.joined) then
             DrawScoreboard(pos, ang, 0.5, boat_soccer_client.controllers[self:EntIndex()].players, self:GetNWInt("score0", 0))
         else
@@ -107,7 +107,6 @@ function ENT:Draw()
                 self.time = 5
                 self.matchStartTime = SysTime() + boat_soccer_config.matchLength + 1
                 self.currentTime = SysTime()
-                self:SetNWBool("counting", false)
 
                 for i=1,5 do
                     timer.Simple(i, function()
@@ -119,7 +118,6 @@ function ENT:Draw()
                 timer.Simple(5, function()
                     if (!self:IsValid()) then return end
                     self.matchStartTime = SysTime() + boat_soccer_config.matchLength
-                    self:SetNWBool("counting", true)
                 end )
             end
 
@@ -127,7 +125,6 @@ function ENT:Draw()
             if (DrawHUD(self.time, self:GetNWInt("winner", -1), self:GetNWInt("score0", 0), self:GetNWInt("score1", 0), matchTime)) then
                 -- Reset game
                 self.lastGameStarted = false
-                self:SetNWBool("counting", false)
                 self.matchStartTime = SysTime() + boat_soccer_config.matchLength + 1
                 self.currentTime = SysTime()
             end
