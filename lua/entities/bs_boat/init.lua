@@ -47,6 +47,7 @@ function ENT:Initialize()
     self.speed = 1000
     self.turnSpeed = 1
     self.team = -1
+    self.camera = nil
 
     -- Start physics
     local phys = self:GetPhysicsObject()
