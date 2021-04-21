@@ -26,8 +26,6 @@ end
 
 function ENT:ExitBoat(activator)
     -- Runs exit sequence
-    print("Exitted the boat")
-
     self.driver:UnSpectate()
     self.driver:Spawn()
     self.driver:SetPos(self:GetPos() + Vector(0, 0, 50))
@@ -70,8 +68,6 @@ function ENT:Use( activator )
             activator:SpectateEntity(self)
             activator:SetPos(Vector(0, 0, 100))
             activator:StripWeapons()
-
-            print("Entered the boat")
         elseif (self.driver == activator) then
             self:ExitBoat(activator)
         end
