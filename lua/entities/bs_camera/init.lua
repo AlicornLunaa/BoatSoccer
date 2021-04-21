@@ -55,8 +55,16 @@ function ENT:Think()
 end
 
 function ENT:OnRemove()
-    if (self.ply and self.ply:IsValid()) then
-        self.ply:SetViewEntity(self.ply)
+    if (istable(self.ply)) then
+        for k, v in pairs(self.ply) do
+            if (v and v:IsValid()) then
+                v:SetViewEntity(v)
+            end
+        end
+    else
+        if (self.ply and self.ply:IsValid()) then
+            self.ply:SetViewEntity(self.ply)
+        end
     end
 end
 
@@ -98,8 +106,16 @@ function ENT:StartTransition(ply)
     self:SetPos(self.frames[1].pos)
     self:SetAngles(self.frames[1].ang)
 
-    if (self.ply and self.ply:IsValid()) then
-        self.ply:SetViewEntity(self)
+    if (istable(self.ply)) then
+        for k, v in pairs(self.ply) do
+            if (v and v:IsValid()) then
+                v:SetViewEntity(self)
+            end
+        end
+    else
+        if (self.ply and self.ply:IsValid()) then
+            self.ply:SetViewEntity(self)
+        end
     end
 
     self.running = true
