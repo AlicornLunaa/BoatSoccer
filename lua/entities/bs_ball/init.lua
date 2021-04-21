@@ -49,6 +49,17 @@ function ENT:ResetBall()
     self:SetNWInt("team", -1)
 end
 
+function ENT:ScoreAnim()
+    self:ResetBall()
+    local explosion = ents.Create("env_explosion")
+    explosion:SetPos(self:GetPos())
+    explosion:Spawn()
+    explosion:SetKeyValue("iMagnitude", "0")
+    explosion:Fire("Explode", 0, 0)
+
+    self:SetPos(Vector(0, 0, 0))
+end
+
 -- Hooks
 local function FixBuoyancy(_, ent)
     if (ent:IsValid() and ent.bs_buoyancy) then

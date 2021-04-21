@@ -25,6 +25,13 @@ local function SpawnBall(pos)
     return e
 end
 
+local function ThrowBoats(boats, pos, strength)
+    -- Pushes boats away from the position given
+    for k, v in pairs(boats) do
+        v:GetPhysicsObject():ApplyForceCenter((v:GetPos() - pos):GetNormalized() * strength)
+    end
+end
+
 function ENT:Initialize()
     self:SetModel("models/boat_soccer/arena.mdl")
     self:PhysicsInit(SOLID_VPHYSICS)
@@ -132,8 +139,11 @@ function ENT:StartGame()
             self:SetNWInt("score0", self:GetNWInt("score0", 0) + 1)
 
             self.bs_ball:GetPhysicsObject():EnableMotion(false)
+            self.bs_ball:ScoreAnim()
+            ThrowBoats(self.spawnedBoats, self.bs_ball:GetPos(), boat_soccer_config.throwForce)
 
             timer.Simple(2, function()
+                if (!self:IsValid()) then return end
                 self:ResetRound()
             end )
         end
@@ -147,6 +157,8 @@ function ENT:StartGame()
             self:SetNWInt("score1", self:GetNWInt("score1", 0) + 1)
 
             self.bs_ball:GetPhysicsObject():EnableMotion(false)
+            self.bs_ball:ScoreAnim()
+            ThrowBoats(self.spawnedBoats, self.bs_ball:GetPos(), boat_soccer_config.throwForce)
 
             timer.Simple(2, function()
                 self:ResetRound()
