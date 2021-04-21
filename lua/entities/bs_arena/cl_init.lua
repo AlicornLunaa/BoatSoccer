@@ -31,7 +31,7 @@ local function DrawScoreboard(pos, ang, scale, players, score0, score1)
     cam.End3D2D()
 end
 
-local function DrawHUD(time, winner, score0, score1)
+local function DrawHUD(time, winner, score0, score1, matchTime)
     local out = false
     local oldW, oldH = ScrW(), ScrH()
     render.SetViewPort(oldW / 2 - 250, 0, 500, 500)
@@ -66,6 +66,7 @@ local function DrawHUD(time, winner, score0, score1)
         draw.RoundedBoxEx(10, 75, 0, 350, 50, boat_soccer_config.neutral, false, false, true, true)
         draw.DrawText(tostring(score0), "bs_font_hud_score", 100, -8, boat_soccer_config.team0, TEXT_ALIGN_TOP)
         draw.DrawText(tostring(score1), "bs_font_hud_score", 370, -8, boat_soccer_config.team1, TEXT_ALIGN_TOP)
+        draw.DrawText(string.format("%d:%02d", matchTime / 60, matchTime % 60), "bs_font_hud_score", 250, -9, boat_soccer_config.text, TEXT_ALIGN_CENTER)
     cam.End2D()
 
     render.SetViewPort(0, 0, oldW, oldH)
@@ -76,10 +77,16 @@ function ENT:Initialize()
     self.time = 6
     self.lastGameStarted = false
     self.lastRound = self:GetNWInt("round", 1)
+    self.matchStartTime = SysTime() + boat_soccer_config.matchLength + 1
+    self.currentTime = SysTime()
 end
 
 function ENT:Draw()
     self:DrawModel()
+
+    if (self:GetNWBool("counting")) then
+        self.currentTime = SysTime()
+    end
 
     local _, maxs = self:GetModelBounds()
     local pos = self:LocalToWorld(Vector(0, 0, maxs.z + 48))
@@ -94,20 +101,35 @@ function ENT:Draw()
             -- Check if the game started to start a countdown
             if ((boat_soccer_client.controllers[self:EntIndex()].gameStarted != self.lastGameStarted and self.lastGameStarted == false) or
                     (self:GetNWInt("round", 1) != self.lastRound and boat_soccer_client.controllers[self:EntIndex()].gameStarted == true)) then
+                -- Runs once at the start of every round
                 self.lastGameStarted = boat_soccer_client.controllers[self:EntIndex()].gameStarted
                 self.lastRound = self:GetNWInt("round", 1)
                 self.time = 5
+                self.matchStartTime = SysTime() + boat_soccer_config.matchLength + 1
+                self.currentTime = SysTime()
+                self:SetNWBool("counting", false)
 
                 for i=1,5 do
                     timer.Simple(i, function()
+                        if (!self:IsValid()) then return end
                         self.time = self.time - 1
                     end )
                 end
+
+                timer.Simple(5, function()
+                    if (!self:IsValid()) then return end
+                    self.matchStartTime = SysTime() + boat_soccer_config.matchLength
+                    self:SetNWBool("counting", true)
+                end )
             end
 
-            if (DrawHUD(self.time, self:GetNWInt("winner", -1), self:GetNWInt("score0", 0), self:GetNWInt("score1", 0))) then
+            local matchTime = self.matchStartTime - self.currentTime
+            if (DrawHUD(self.time, self:GetNWInt("winner", -1), self:GetNWInt("score0", 0), self:GetNWInt("score1", 0), matchTime)) then
                 -- Reset game
                 self.lastGameStarted = false
+                self:SetNWBool("counting", false)
+                self.matchStartTime = SysTime() + boat_soccer_config.matchLength + 1
+                self.currentTime = SysTime()
             end
         end
     end

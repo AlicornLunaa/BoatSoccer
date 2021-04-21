@@ -48,6 +48,8 @@ function ENT:Initialize()
     self:SetNWInt("score1", 0)
     self:SetNWInt("round", 1)
     self:SetNWInt("winner", -1)
+    self:SetNWFloat("matchStartTime", SysTime())
+    self:SetNWBool("counting", true)
 
     -- Phys init
     local phys = self:GetPhysicsObject()
@@ -124,6 +126,7 @@ function ENT:StartGame()
     -- Callbacks for goals
     self.goal0:AddCallback("PhysicsCollide", function(e, data)
         if (data.HitEntity == self.bs_ball and !self.resetting) then
+            self:SetNWBool("counting", false)
             self.resetting = true
             self:SetNWInt("score0", self:GetNWInt("score0", 0) + 1)
 
@@ -137,6 +140,7 @@ function ENT:StartGame()
 
     self.goal1:AddCallback("PhysicsCollide", function(e, data)
         if (data.HitEntity == self.bs_ball and !self.resetting) then
+            self:SetNWBool("counting", false)
             self.resetting = true
             self:SetNWInt("score1", self:GetNWInt("score1", 0) + 1)
 
