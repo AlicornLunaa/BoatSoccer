@@ -121,7 +121,7 @@ function ENT:Draw()
                 end )
             end
 
-            local matchTime = self.matchStartTime - self.currentTime
+            local matchTime = math.max(self.matchStartTime - self.currentTime, 0)
             if (DrawHUD(self.time, self:GetNWInt("winner", -1), self:GetNWInt("score0", 0), self:GetNWInt("score1", 0), matchTime)) then
                 -- Reset game
                 self.lastGameStarted = false

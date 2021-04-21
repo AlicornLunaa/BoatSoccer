@@ -96,6 +96,8 @@ end
 
 function ENT:OnRemove()
     -- Cleanup
+    timer.Stop("roundTime")
+
     -- Force every player to leave
     for k, v in pairs(boat_soccer.controllers[self:EntIndex()].players) do
         if (!player.GetBySteamID64(k)) then continue end
@@ -134,6 +136,7 @@ function ENT:StartGame()
     self.goal0:AddCallback("PhysicsCollide", function(e, data)
         if (data.HitEntity == self.bs_ball and !self.resetting) then
             boat_soccer.controllers[self:EntIndex()].counting = false
+            timer.Stop("roundTime")
 
             self.resetting = true
             self:SetNWInt("score0", self:GetNWInt("score0", 0) + 1)
@@ -152,6 +155,7 @@ function ENT:StartGame()
     self.goal1:AddCallback("PhysicsCollide", function(e, data)
         if (data.HitEntity == self.bs_ball and !self.resetting) then
             boat_soccer.controllers[self:EntIndex()].counting = false
+            timer.Stop("roundTime")
 
             self.resetting = true
             self:SetNWInt("score1", self:GetNWInt("score1", 0) + 1)
@@ -164,6 +168,24 @@ function ENT:StartGame()
                 self:ResetRound()
             end )
         end
+    end )
+
+    -- Round timer
+    timer.Create("roundTime", boat_soccer_config.matchLength, 1, function()
+        -- End round
+        boat_soccer.controllers[self:EntIndex()].counting = false
+        self.resetting = true
+
+        self.bs_ball:GetPhysicsObject():EnableMotion(false)
+        self.bs_ball:ScoreAnim()
+        ThrowBoats(self.spawnedBoats, self.bs_ball:GetPos(), boat_soccer_config.throwForce)
+
+        timer.Simple(2, function()
+            if (self:CalcWinnerForced() == -1) then
+                -- Start overtime
+                
+            end
+        end )
     end )
 
     -- Spawn boats for each player on each team
@@ -213,6 +235,7 @@ function ENT:StartGame()
         end
 
         boat_soccer.controllers[self:EntIndex()].counting = true
+        timer.Start("roundTime")
     end )
 end
 
@@ -223,6 +246,8 @@ function ENT:ResetRound()
     self.bs_ball:GetPhysicsObject():EnableMotion(false)
     self.bs_ball:SetPos(self:LocalToWorld(Vector(0, 0, 80)))
     self.bs_ball:ResetBall()
+
+    timer.Stop("roundTime")
 
     -- Spawn boats for each player on each team
     local spawn0 = 1
@@ -263,6 +288,7 @@ function ENT:ResetRound()
         end
 
         boat_soccer.controllers[self:EntIndex()].counting = true
+        timer.Start("roundTime")
     end )
 end
 
@@ -270,14 +296,12 @@ function ENT:CheckScore()
     -- Checks score to see if anyone has won
     if (self:GetNWInt("score0", 0) >= boat_soccer_config.winningScore) then
         -- Team 0 has won
-        print("Red team won!")
         self:SetNWInt("winner", 0)
         self:EndGame()
 
         return true
     elseif (self:GetNWInt("score1", 0) >= boat_soccer_config.winningScore) then
         -- Team 1 has won
-        print("Blue team won!")
         self:SetNWInt("winner", 1)
         self:EndGame()
 
@@ -287,12 +311,28 @@ function ENT:CheckScore()
     return false
 end
 
+function ENT:CalcWinnerForced()
+    if (self:GetNWInt("score0", 0) == self:GetNWInt("score1", 0)) then
+        -- Tie
+        return -1
+    elseif (self:GetNWInt("score0", 0) > self:GetNWInt("score1", 0)) then
+        self:SetNWInt("winner", 0)
+        self:EndGame()
+        return 0
+    else
+        self:SetNWInt("winner", 1)
+        self:EndGame()
+        return 1
+    end
+end
+
 function ENT:EndGame()
     -- Ends the game without actually removing the entity
     boat_soccer.controllers[self:EntIndex()].counting = false
     boat_soccer.controllers[self:EntIndex()].gameStarted = false
     self:SetNWInt("round", 1)
     self.resetting = false
+    timer.Remove("roundTime")
 
     self:SetNWInt("score0", 0)
     self:SetNWInt("score1", 0)
