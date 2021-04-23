@@ -33,7 +33,7 @@ local function ThrowBoats(boats, pos, strength)
 end
 
 function ENT:Initialize()
-    self:SetModel("models/boat_soccer/arena.mdl")
+    self:SetModel("models/boat_soccer/arena0.mdl")
     self:PhysicsInit(SOLID_VPHYSICS)
     self:SetMoveType(MOVETYPE_VPHYSICS)
     self:SetSolid(SOLID_VPHYSICS)
