@@ -1,6 +1,8 @@
 include("shared.lua")
 include("boat_soccer/sh_init.lua")
 
+local animY = 55
+
 local function DrawCentered(roundness, x, y, w, h, c)
     draw.RoundedBox(roundness, x - w / 2, y - h / 2, w, h, c)
 end
@@ -62,12 +64,16 @@ local function DrawHUD(time, winner, score0, score1, matchTime)
         end
 
         -- Draw top scoreboard
-        draw.RoundedBoxEx(10, 70, 0, 360, 55, boat_soccer_config.text, false, false, true, true)
-        draw.RoundedBoxEx(10, 75, 0, 350, 50, boat_soccer_config.neutral, false, false, true, true)
-        draw.DrawText(tostring(score0), "bs_font_hud_score", 100, -8, boat_soccer_config.team0, TEXT_ALIGN_TOP)
-        draw.DrawText(tostring(score1), "bs_font_hud_score", 370, -8, boat_soccer_config.team1, TEXT_ALIGN_TOP)
-        draw.DrawText(string.format("%d:%02d", matchTime / 60, matchTime % 60), "bs_font_hud_score", 250, -9, boat_soccer_config.text, TEXT_ALIGN_CENTER)
+        draw.RoundedBoxEx(10, 70, 0, 360, 55 - animY, boat_soccer_config.text, false, false, true, true)
+        draw.RoundedBoxEx(10, 75, 0, 350, 50 - animY, boat_soccer_config.neutral, false, false, true, true)
+        draw.DrawText(tostring(score0), "bs_font_hud_score", 100, -8 - animY, boat_soccer_config.team0, TEXT_ALIGN_TOP)
+        draw.DrawText(tostring(score1), "bs_font_hud_score", 370, -8 - animY, boat_soccer_config.team1, TEXT_ALIGN_TOP)
+        draw.DrawText(string.format("%d:%02d", matchTime / 60, matchTime % 60), "bs_font_hud_score", 250, -9 - animY, boat_soccer_config.text, TEXT_ALIGN_CENTER)
     cam.End2D()
+
+    if (animY > 0) then
+        animY = math.max(animY - FrameTime() * 100, 0)
+    end
 
     render.SetViewPort(0, 0, oldW, oldH)
     return out
