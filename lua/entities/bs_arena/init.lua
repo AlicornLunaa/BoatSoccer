@@ -203,14 +203,14 @@ function ENT:StartGame()
             color = boat_soccer_config.team0
 
             spawn0 = spawn0 + 1
-            if (spawn0 > 10) then spawn0 = 1 end
+            if (spawn0 > 5) then spawn0 = 1 end
         else
             pos = self:LocalToWorld(boat_soccer_config.team1_spawns[spawn1])
             ang = self:LocalToWorldAngles(Angle(0, 0, 0))
             color = boat_soccer_config.team1
 
             spawn1 = spawn1 + 1
-            if (spawn1 > 10) then spawn1 = 1 end
+            if (spawn1 > 5) then spawn1 = 1 end
         end
 
         self.spawnedBoats[#self.spawnedBoats + 1] = ents.Create("bs_boat")
