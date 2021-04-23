@@ -38,7 +38,7 @@ local function DrawHUD(time, winner, score0, score1, matchTime)
 
     cam.Start2D()
         -- Draw 5 second counter
-        if (time != 6 and time != 0) then
+        if (time != boat_soccer_config.setupLength + 1 and time != 0) then
             draw.RoundedBox(20, 194, 110, 112, 175, boat_soccer_config.neutral)
             draw.DrawText(tostring(time), "bs_font_hud_large", 250, 100, boat_soccer_config.text, TEXT_ALIGN_CENTER)
         end
@@ -74,16 +74,11 @@ local function DrawHUD(time, winner, score0, score1, matchTime)
 end
 
 function ENT:Initialize()
-    self.time = 6
+    self.time = boat_soccer_config.setupLength + 1
     self.lastGameStarted = false
     self.lastRound = self:GetNWInt("round", 1)
     self.matchStartTime = SysTime() + boat_soccer_config.matchLength + 1
     self.currentTime = SysTime()
-
-    -- Debug
-    concommand.Add("cl_bs_getpos", function()
-        print(self:WorldToLocal(LocalPlayer():GetPos()))
-    end )
 end
 
 function ENT:Draw()
@@ -109,18 +104,18 @@ function ENT:Draw()
                 -- Runs once at the start of every round
                 self.lastGameStarted = boat_soccer_client.controllers[self:EntIndex()].gameStarted
                 self.lastRound = self:GetNWInt("round", 1)
-                self.time = 5
+                self.time = boat_soccer_config.setupLength
                 self.matchStartTime = SysTime() + boat_soccer_config.matchLength + 1
                 self.currentTime = SysTime()
 
-                for i=1,5 do
+                for i=1,boat_soccer_config.setupLength do
                     timer.Simple(i, function()
                         if (!self:IsValid()) then return end
                         self.time = self.time - 1
                     end )
                 end
 
-                timer.Simple(5, function()
+                timer.Simple(boat_soccer_config.setupLength, function()
                     if (!self:IsValid()) then return end
                     self.matchStartTime = SysTime() + boat_soccer_config.matchLength
                 end )

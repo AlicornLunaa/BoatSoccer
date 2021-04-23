@@ -32,6 +32,19 @@ local function ThrowBoats(boats, pos, strength)
     end
 end
 
+local function IntroScene(pos, ang, ply)
+    local bsCam = ents.Create("bs_camera")
+    bsCam:Spawn()
+    bsCam:InitTransition(pos, ang)
+    bsCam:SetTransition(Vector(-200, 200, 0), Angle(25, 0, 0), 0.01)
+    bsCam:SetTransition(Vector(200, 0, 0), Angle(2, 0, 0), 1)
+    bsCam:SetTransition(Vector(200, 0, 0), Angle(-2, 0, 0), 1)
+    bsCam:SetTransition(Vector(100, -600, 0), Angle(0, 180, 0), 2)
+    bsCam:SetTransition(Vector(-200, 0, 0), Angle(2, 0, 0), 1)
+    bsCam:SetTransition(Vector(-200, 0, 0), Angle(-2, 0, 0), 1)
+    bsCam:StartTransition(ply)
+end
+
 function ENT:Initialize()
     self:SetModel("models/boat_soccer/arena0.mdl")
     self:PhysicsInit(SOLID_VPHYSICS)
@@ -191,7 +204,9 @@ function ENT:StartGame()
     -- Spawn boats for each player on each team
     local spawn0 = 1
     local spawn1 = 1
+    local introRiders = {}
     for k, v in pairs(boat_soccer.controllers[self:EntIndex()].players) do
+        introRiders[#introRiders + 1] = player.GetBySteamID64(k)
         boat_soccer.CloseDerma(player.GetBySteamID64(k))
 
         local pos
@@ -223,7 +238,9 @@ function ENT:StartGame()
         self.spawnedBoats[#self.spawnedBoats]:Use(player.GetBySteamID64(k))
     end
 
-    timer.Simple(5, function()
+    IntroScene(self:LocalToWorld(Vector(0, 0, 150)), self:LocalToWorldAngles(Angle(0, 0, 0)), introRiders)
+
+    timer.Simple(boat_soccer_config.setupLength, function()
         if (!self:IsValid()) then return end
 
         self.bs_ball:GetPhysicsObject():EnableMotion(true)
@@ -252,7 +269,12 @@ function ENT:ResetRound()
     -- Spawn boats for each player on each team
     local spawn0 = 1
     local spawn1 = 1
+    local introRiders = {}
     for k, v in pairs(self.spawnedBoats) do
+        if (v.driver and v.driver:IsValid()) then
+            introRiders[#introRiders + 1] = v.driver
+        end
+
         local pos
         local ang
         if (v.team == 0) then
@@ -274,7 +296,9 @@ function ENT:ResetRound()
         v:GetPhysicsObject():EnableMotion(false)
     end
 
-    timer.Simple(5, function()
+    IntroScene(self:LocalToWorld(Vector(0, 0, 150)), self:LocalToWorldAngles(Angle(0, 0, 0)), introRiders)
+
+    timer.Simple(boat_soccer_config.setupLength, function()
         if (!self:IsValid()) then return end
 
         self.resetting = false
