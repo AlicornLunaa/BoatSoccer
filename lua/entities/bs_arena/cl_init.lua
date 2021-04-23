@@ -79,6 +79,11 @@ function ENT:Initialize()
     self.lastRound = self:GetNWInt("round", 1)
     self.matchStartTime = SysTime() + boat_soccer_config.matchLength + 1
     self.currentTime = SysTime()
+
+    -- Debug
+    concommand.Add("cl_bs_getpos", function()
+        print(self:WorldToLocal(LocalPlayer():GetPos()))
+    end )
 end
 
 function ENT:Draw()

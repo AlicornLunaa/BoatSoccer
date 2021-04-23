@@ -125,8 +125,8 @@ end
 function ENT:StartGame()
     -- Spawn ball
     boat_soccer.controllers[self:EntIndex()].gameStarted = true
-    self.goal0 = SpawnGoal(self:GetPos(), self:GetAngles())
-    self.goal1 = SpawnGoal(self:GetPos(), self:LocalToWorldAngles(Angle(0, 180, 0)))
+    self.goal0 = SpawnGoal(self:GetPos(), self:LocalToWorldAngles(Angle(0, 180, 0)))
+    self.goal1 = SpawnGoal(self:GetPos(), self:LocalToWorldAngles(Angle(0, 0, 0)))
     self.bs_ball = SpawnBall(self:LocalToWorld(Vector(0, 0, 80)))
 
     constraint.NoCollide(self, self.goal0, 0, 0)
@@ -199,14 +199,14 @@ function ENT:StartGame()
         local color
         if (v.team == 0) then
             pos = self:LocalToWorld(boat_soccer_config.team0_spawns[spawn0])
-            ang = self:LocalToWorldAngles(Angle(0, 0, 0))
+            ang = self:LocalToWorldAngles(Angle(0, 180, 0))
             color = boat_soccer_config.team0
 
             spawn0 = spawn0 + 1
             if (spawn0 > 10) then spawn0 = 1 end
         else
             pos = self:LocalToWorld(boat_soccer_config.team1_spawns[spawn1])
-            ang = self:LocalToWorldAngles(Angle(0, 180, 0))
+            ang = self:LocalToWorldAngles(Angle(0, 0, 0))
             color = boat_soccer_config.team1
 
             spawn1 = spawn1 + 1
@@ -257,13 +257,13 @@ function ENT:ResetRound()
         local ang
         if (v.team == 0) then
             pos = self:LocalToWorld(boat_soccer_config.team0_spawns[spawn0])
-            ang = self:LocalToWorldAngles(Angle(0, 0, 0))
+            ang = self:LocalToWorldAngles(Angle(0, 180, 0))
 
             spawn0 = spawn0 + 1
             if (spawn0 > 5) then spawn0 = 1 end
         else
             pos = self:LocalToWorld(boat_soccer_config.team1_spawns[spawn1])
-            ang = self:LocalToWorldAngles(Angle(0, 180, 0))
+            ang = self:LocalToWorldAngles(Angle(0, 0, 0))
 
             spawn1 = spawn1 + 1
             if (spawn1 > 5) then spawn1 = 1 end
