@@ -4,6 +4,7 @@ AddCSLuaFile("shared.lua")
 
 -- Include entity settings
 include("shared.lua")
+include("boat_soccer/sh_init.lua")
 
 -- Helper functions
 local function applyTorque(ent, force)
@@ -30,6 +31,7 @@ function ENT:ExitBoat(activator)
     self.driver:Spawn()
     self.driver:SetPos(self:GetPos() + Vector(0, 0, 50))
     self.driver = nil
+    self:SetNWBool("driving", false)
 end
 
 -- Entity functions
@@ -46,6 +48,7 @@ function ENT:Initialize()
     self.driver = nil
     self.speed = 1000
     self.turnSpeed = 1
+    self.jumpForce = 500
     self.multiplier = 1
     self.team = -1
     self.camera = nil
@@ -53,7 +56,8 @@ function ENT:Initialize()
     self.trail = nil
 
     -- Networked variables
-    self:SetNWInt("boost", 33)
+    self:SetNWBool("driving", false)
+    self:SetNWFloat("boost", 33)
 
     -- Start physics
     local phys = self:GetPhysicsObject()
@@ -70,6 +74,8 @@ function ENT:Use( activator )
     if (activator:IsPlayer()) then
         if (!self.driver) then
             self.driver = activator
+            self:SetNWEntity("driver", self.driver)
+            self:SetNWBool("driving", true)
 
             activator:Spectate(OBS_MODE_CHASE)
             activator:SpectateEntity(self)
@@ -104,15 +110,19 @@ function ENT:Think()
                 phys:ApplyForceCenter(self:GetRight() * self.speed / self.multiplier)
             end
 
-            if (self.driver:KeyDown(IN_SPEED)) then
+            if (self.driver:KeyDown(IN_SPEED) and self:GetNWFloat("boost", 0) > 0) then
                 -- Boost
                 self.multiplier = 3
 
-                if (self.boosting == false) then
-                    self.trail = util.SpriteTrail(self, 0, self:GetColor(), false, 15, 1, 1 / 2, 1 / 32, "trails/laser")
+                if (self:GetNWFloat("boost", 0) >= 1) then
+                    if (self.boosting == false) then
+                        self.trail = util.SpriteTrail(self, 0, self:GetColor(), false, 15, 1, 1 / 2, 1 / 32, "trails/laser")
+                    end
+
+                    self.trail:SetKeyValue("Lifetime", tostring(self:GetVelocity():Length() / 300))
                 end
 
-                self.trail:SetKeyValue("Lifetime", tostring(self:GetVelocity():Length() / 300))
+                self:SetNWFloat("boost", math.max(self:GetNWFloat("boost", 0) - boat_soccer_config.boostDrain, 0))
                 self.boosting = true
             else
                 self.multiplier = 1
@@ -121,7 +131,13 @@ function ENT:Think()
                     self.trail:Remove()
                 end
 
+                self:SetNWFloat("boost", math.min(self:GetNWFloat("boost", 0) + boat_soccer_config.boostRegen, 100))
                 self.boosting = false
+            end
+
+            if (self.driver:KeyDown(IN_JUMP)) then
+                -- Jump out of water
+                phys:ApplyForceCenter(self:GetUp() * self.jumpForce * self.multiplier)
             end
         end
 
