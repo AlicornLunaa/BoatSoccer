@@ -18,6 +18,10 @@ function boat_soccer.GetTeamCount(team, id)
     return count
 end
 
+function boat_soccer.IsStarted(id)
+    return boat_soccer.controllers[id].gameStarted
+end
+
 function boat_soccer.AddPlayer(ply, id)
     -- Adds player to the controller with that id
     local ma = (#boat_soccer.controllers[id].players == 0)
@@ -51,3 +55,17 @@ end
 function boat_soccer.StartGame(id)
     boat_soccer.controllers[id].entity:StartGame()
 end
+
+-- Hooks
+hook.Add("PhysgunPickup", "boat_soccer:allowpickup", function(ply, ent)
+    -- Disable pickup for started arenas
+    if (ent.ClassName == "bs_arena") then
+        return !boat_soccer.IsStarted(ent:EntIndex())
+    elseif (ent.ClassName == "bs_ball") then
+        return false
+    elseif (ent.ClassName == "bs_boat") then
+        return ent.team == -1
+    end
+
+    return true
+end )
