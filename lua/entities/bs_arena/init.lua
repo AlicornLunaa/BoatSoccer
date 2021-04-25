@@ -79,34 +79,6 @@ function ENT:Initialize()
     boat_soccer.controllers[self:EntIndex()].gameStarted = false
     boat_soccer.controllers[self:EntIndex()].counting = false
 
-    --[[boat_soccer.controllers[self:EntIndex()].players = { -- DEBUG DATA
-        a = {
-            name = "a",
-            team = 0,
-            matchAdmin = false
-        },
-        b = {
-            name = "b",
-            team = 0,
-            matchAdmin = false
-        },
-        c = {
-            name = "c",
-            team = 0,
-            matchAdmin = false
-        },
-        d = {
-            name = "d",
-            team = 0,
-            matchAdmin = false
-        },
-        e = {
-            name = "e",
-            team = 0,
-            matchAdmin = false
-        }
-    }]]
-
     -- Networked variables
     self:SetNWInt("score0", 0)
     self:SetNWInt("score1", 0)
@@ -270,6 +242,9 @@ function ENT:StartGame()
             spawn1 = spawn1 + 1
             if (spawn1 > 5) then spawn1 = 1 end
         end
+
+        ang.p = 0
+        ang.r = 0
 
         self.spawnedBoats[#self.spawnedBoats + 1] = ents.Create("bs_boat")
         self.spawnedBoats[#self.spawnedBoats]:SetPos(pos)
