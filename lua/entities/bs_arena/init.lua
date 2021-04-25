@@ -32,10 +32,10 @@ local function ThrowBoats(boats, pos, strength)
     end
 end
 
-local function IntroScene(pos, ang, ply)
+local function IntroScene(parent, pos, ang, ply)
     local bsCam = ents.Create("bs_camera")
     bsCam:Spawn()
-    bsCam:InitTransition(pos, ang)
+    bsCam:InitTransition(parent, pos, ang)
     bsCam:SetTransition(Vector(-200, 200, 0), Angle(25, 0, 0), 0.01)
     bsCam:SetTransition(Vector(200, 0, 0), Angle(2, 0, 0), 1)
     bsCam:SetTransition(Vector(200, 0, 0), Angle(-2, 0, 0), 1)
@@ -267,7 +267,7 @@ function ENT:StartGame()
         self.spawnedBoats[#self.spawnedBoats]:Use(player.GetBySteamID64(k))
     end
 
-    IntroScene(self:LocalToWorld(Vector(0, 0, 150)), self:LocalToWorldAngles(Angle(0, 0, 0)), introRiders)
+    IntroScene(self, self:LocalToWorld(Vector(0, 0, 150)), self:LocalToWorldAngles(Angle(0, 0, 0)), introRiders)
 
     timer.Simple(boat_soccer_config.setupLength, function()
         if (!self:IsValid()) then return end
@@ -328,7 +328,7 @@ function ENT:ResetRound()
         v:GetPhysicsObject():EnableMotion(false)
     end
 
-    IntroScene(self:LocalToWorld(Vector(0, 0, 150)), self:LocalToWorldAngles(Angle(0, 0, 0)), introRiders)
+    IntroScene(self, self:LocalToWorld(Vector(0, 0, 150)), self:LocalToWorldAngles(Angle(0, 0, 0)), introRiders)
 
     timer.Simple(boat_soccer_config.setupLength, function()
         if (!self:IsValid()) then return end

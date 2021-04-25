@@ -8,6 +8,7 @@ function ENT:Initialize()
     self:SetMoveType(MOVETYPE_VPHYSICS)
     self:SetSolid(SOLID_VPHYSICS)
 
+    self.parent = self
     self.ply = nil
     self.frames = {}
     self.running = false
@@ -42,7 +43,8 @@ function ENT:Think()
         end
 
         -- End
-        if (self.currentFrame >= #self.frames) then
+        print(self.parent)
+        if (self.currentFrame >= #self.frames or !self.parent:IsValid()) then
             self:Remove()
             return
         end
@@ -68,7 +70,9 @@ function ENT:OnRemove()
 end
 
 -- Functions
-function ENT:InitTransition(pos, ang)
+function ENT:InitTransition(parent, pos, ang)
+    self.parent = parent
+
     self.frames[#self.frames + 1] = {
         ["pos"] = pos,
         ["ang"] = ang,
