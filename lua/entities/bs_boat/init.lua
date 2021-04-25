@@ -46,8 +46,14 @@ function ENT:Initialize()
     self.driver = nil
     self.speed = 1000
     self.turnSpeed = 1
+    self.multiplier = 1
     self.team = -1
     self.camera = nil
+    self.boosting = false
+    self.trail = nil
+
+    -- Networked variables
+    self:SetNWInt("boost", 33)
 
     -- Start physics
     local phys = self:GetPhysicsObject()
@@ -83,26 +89,46 @@ function ENT:Think()
 
         if (self:WaterLevel() >= 1) then
             if (self.driver:KeyDown(IN_FORWARD)) then
-                phys:ApplyForceCenter(self:GetForward() * self.speed)
+                phys:ApplyForceCenter(self:GetForward() * self.speed * self.multiplier)
             end
 
             if (self.driver:KeyDown(IN_BACK)) then
-                phys:ApplyForceCenter(self:GetForward() * -self.speed)
+                phys:ApplyForceCenter(self:GetForward() * -self.speed * self.multiplier)
             end
 
             if (self.driver:KeyDown(IN_MOVELEFT)) then
-                phys:ApplyForceCenter(self:GetRight() * -self.speed)
+                phys:ApplyForceCenter(self:GetRight() * -self.speed / self.multiplier)
             end
 
             if (self.driver:KeyDown(IN_MOVERIGHT)) then
-                phys:ApplyForceCenter(self:GetRight() * self.speed)
+                phys:ApplyForceCenter(self:GetRight() * self.speed / self.multiplier)
+            end
+
+            if (self.driver:KeyDown(IN_SPEED)) then
+                -- Boost
+                self.multiplier = 3
+
+                if (self.boosting == false) then
+                    self.trail = util.SpriteTrail(self, 0, self:GetColor(), false, 15, 1, 1 / 2, 1 / 32, "trails/laser")
+                end
+
+                self.trail:SetKeyValue("Lifetime", tostring(self:GetVelocity():Length() / 300))
+                self.boosting = true
+            else
+                self.multiplier = 1
+
+                if (self.boosting == true and self.trail and self.trail:IsValid()) then
+                    self.trail:Remove()
+                end
+
+                self.boosting = false
             end
         end
 
         -- Set angles
         local rotationScale = self:GetVelocity():Length() / 500
         local _, localAng = WorldToLocal(self:GetPos(), self:GetAngles(), self.driver:GetPos(), self.driver:EyeAngles())
-        localAng.y = math.Clamp(localAng.y + (self:GetPhysicsObject():GetAngleVelocity() * 0.1).z, -45, 45)
+        localAng.y = math.Clamp(localAng.y + (self:GetPhysicsObject():GetAngleVelocity() * 0.1).z, -45, 45) / self.multiplier
         localAng.z = math.Clamp(self:GetAngles().z + (self:GetPhysicsObject():GetAngleVelocity() * 0.1).x, -45, 45)
         applyTorque(self, Vector(-localAng.z * 0.5, 0, localAng.y * -10 * rotationScale) * phys:GetMass())
 
