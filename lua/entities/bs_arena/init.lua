@@ -45,6 +45,25 @@ local function IntroScene(pos, ang, ply)
     bsCam:StartTransition(ply)
 end
 
+local function IsInGame(ply)
+    -- Checks if a player is in another game
+    for index, controller in pairs(boat_soccer.controllers) do
+        if (!controller) then continue end
+
+        for id, player in pairs(controller.players) do
+            if (ply:SteamID64() == id) then
+                return index
+            end
+        end
+    end
+
+    return false
+end
+
+concommand.Add("bs_test", function(ply)
+    print(IsInGame(ply))
+end )
+
 function ENT:Initialize()
     self:SetModel("models/boat_soccer/arena0.mdl")
     self:PhysicsInit(SOLID_VPHYSICS)
@@ -80,7 +99,7 @@ function ENT:Initialize()
 end
 
 function ENT:Use( activator, caller )
-    if (activator:IsValid() and activator:IsPlayer() and !boat_soccer.controllers[self:EntIndex()].gameStarted) then
+    if (activator:IsValid() and activator:IsPlayer() and !boat_soccer.controllers[self:EntIndex()].gameStarted and (IsInGame(activator) == false or IsInGame(activator) == self:EntIndex())) then
         boat_soccer.OpenMenu(activator, self:EntIndex())
     end
 end
