@@ -16,9 +16,17 @@ end
 
 hook.Add("HUDPaint", "boat_soccer:hud", function()
     for boat, v in pairs(boat_hud_spawned) do
-        if (v and v == true and boat:GetNWBool("driving") and LocalPlayer() == boat:GetNWEntity("driver")) then
-            print("A")
-            drawHUD(boat:GetNWFloat("boost", 0))
+        if (v and v == true and boat:GetNWBool("driving")) then
+            -- Draw name
+            local pos = (boat:GetPos() + Vector(0, 0, 15)):ToScreen()
+            if (pos.visible and LocalPlayer() != boat:GetNWEntity("driver")) then
+                draw.DrawText(boat:GetNWEntity("driver"):Nick(), "bs_font_hud_name", pos.x, pos.y, boat:GetColor(), TEXT_ALIGN_CENTER)
+            end
+
+            -- Draw hud
+            if (LocalPlayer() == boat:GetNWEntity("driver")) then
+                drawHUD(boat:GetNWFloat("boost", 0))
+            end
         end
     end
 end )
