@@ -309,6 +309,9 @@ function ENT:ResetRound()
             if (spawn1 > 5) then spawn1 = 1 end
         end
 
+        ang.p = 0
+        ang.r = 0
+
         v:SetPos(pos)
         v:SetAngles(ang)
         v:GetPhysicsObject():EnableMotion(false)

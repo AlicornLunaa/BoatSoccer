@@ -3,9 +3,9 @@ boat_soccer_config = boat_soccer_config or {}
 
 -- Variables
 boat_soccer_config.maxTeamSize = 5
-boat_soccer_config.winningScore = 9
+boat_soccer_config.winningScore = 5
 boat_soccer_config.matchLength = 300 -- 5 minutes in seconds
-boat_soccer_config.setupLength = 9 -- 5 minutes in seconds
+boat_soccer_config.setupLength = 8 -- 5 minutes in seconds
 boat_soccer_config.throwForce = 300000
 boat_soccer_config.boostDrain = 0.67
 boat_soccer_config.boostRegen = 0.15
