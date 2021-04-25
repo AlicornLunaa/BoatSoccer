@@ -92,8 +92,8 @@ function boat_soccer_client.OpenMenu(id, matchAdmin)
     end
 
     local selectedBoatModel = vgui.Create("DModelPanel", frame)
-    selectedBoatModel:SetSize(190, 190)
-    selectedBoatModel:SetPos(305, 75)
+    selectedBoatModel:SetSize(190, 180)
+    selectedBoatModel:SetPos(305, 85)
     selectedBoatModel:SetModel(boat_soccer_config.boats[selectedModel].mdl)
 
     local prevMdlButton = vgui.Create("DButton", frame)
