@@ -79,7 +79,7 @@ function ENT:Initialize()
     boat_soccer.controllers[self:EntIndex()].gameStarted = false
     boat_soccer.controllers[self:EntIndex()].counting = false
 
-    boat_soccer.controllers[self:EntIndex()].players = { -- DEBUG DATA
+    --[[boat_soccer.controllers[self:EntIndex()].players = { -- DEBUG DATA
         a = {
             name = "a",
             team = 0,
@@ -105,7 +105,7 @@ function ENT:Initialize()
             team = 0,
             matchAdmin = false
         }
-    }
+    }]]
 
     -- Networked variables
     self:SetNWInt("score0", 0)
@@ -192,7 +192,7 @@ function ENT:StartGame()
     self.goal0:AddCallback("PhysicsCollide", function(e, data)
         if (data.HitEntity == self.bs_ball and !self.resetting) then
             boat_soccer.controllers[self:EntIndex()].counting = false
-            timer.Stop("roundTime")
+            timer.Pause("roundTime")
 
             self.resetting = true
             self:SetNWInt("score0", self:GetNWInt("score0", 0) + 1)
@@ -211,7 +211,7 @@ function ENT:StartGame()
     self.goal1:AddCallback("PhysicsCollide", function(e, data)
         if (data.HitEntity == self.bs_ball and !self.resetting) then
             boat_soccer.controllers[self:EntIndex()].counting = false
-            timer.Stop("roundTime")
+            timer.Pause("roundTime")
 
             self.resetting = true
             self:SetNWInt("score1", self:GetNWInt("score1", 0) + 1)
@@ -307,7 +307,7 @@ function ENT:ResetRound()
     self.bs_ball:SetPos(self:LocalToWorld(Vector(0, 0, 80)))
     self.bs_ball:ResetBall()
 
-    timer.Stop("roundTime")
+    timer.Pause("roundTime")
 
     -- Spawn boats for each player on each team
     local spawn0 = 1
@@ -355,7 +355,7 @@ function ENT:ResetRound()
         end
 
         boat_soccer.controllers[self:EntIndex()].counting = true
-        timer.Start("roundTime")
+        timer.UnPause("roundTime")
     end )
 end
 

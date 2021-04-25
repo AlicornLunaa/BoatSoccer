@@ -96,6 +96,8 @@ function ENT:Draw()
     local worldAng = self:WorldToLocalAngles(Angle(0, -math.deg(math.atan2(toPlayer.x, toPlayer.y)), 0))
     local ang = self:LocalToWorldAngles(Angle(0, worldAng.y, 90))
 
+    local matchTime = math.max(self.matchStartTime - self.currentTime, 0)
+
     if (boat_soccer_client.controllers[self:EntIndex()] != nil and boat_soccer_client.controllers[self:EntIndex()] != false) then
         if (boat_soccer_client.controllers[self:EntIndex()].counting) then
             self.currentTime = SysTime()
@@ -111,7 +113,7 @@ function ENT:Draw()
                 self.lastGameStarted = boat_soccer_client.controllers[self:EntIndex()].gameStarted
                 self.lastRound = self:GetNWInt("round", 1)
                 self.time = boat_soccer_config.setupLength
-                self.matchStartTime = SysTime() + boat_soccer_config.matchLength + 1
+                self.matchStartTime = SysTime() + matchTime
                 self.currentTime = SysTime()
 
                 for i=1,boat_soccer_config.setupLength do
@@ -121,13 +123,13 @@ function ENT:Draw()
                     end )
                 end
 
-                timer.Simple(boat_soccer_config.setupLength, function()
+                timer.Simple(boat_soccer_config.setupLength - 1, function()
                     if (!self:IsValid()) then return end
-                    self.matchStartTime = SysTime() + boat_soccer_config.matchLength
+                    self.matchStartTime = SysTime() + matchTime
+                    self.currentTime = SysTime()
                 end )
             end
 
-            local matchTime = math.max(self.matchStartTime - self.currentTime, 0)
             if (DrawHUD(self.time, self:GetNWInt("winner", -1), self:GetNWInt("score0", 0), self:GetNWInt("score1", 0), matchTime)) then
                 -- Reset game
                 self.lastGameStarted = false
