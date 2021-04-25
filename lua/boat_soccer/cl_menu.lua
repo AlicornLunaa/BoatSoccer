@@ -6,11 +6,16 @@ local function RefreshList(players, playerList0, playerList1)
     playerList0:Clear()
     playerList1:Clear()
 
-    playerList0:Add(Label("Team 1"))
-    playerList1:Add(Label("Team 2"))
+    local label = Label("Team 1")
+    label:SetTextColor(Color(0, 0, 0))
+    playerList0:Add(label)
+
+    label = Label("Team 2")
+    label:SetTextColor(Color(0, 0, 0))
+    playerList1:Add(label)
 
     for k, v in pairs(players) do
-        local label = Label(v.name)
+        label = Label(v.name)
         label:SetTextColor(Color(0, 0, 0))
 
         if (v.team == 0) then
@@ -29,6 +34,9 @@ function boat_soccer_client.OpenMenu(id, matchAdmin)
     frame:SetTitle("Boat Soccer")
     frame:SetDraggable(true)
     frame:MakePopup()
+    function frame:Paint(w, h)
+        draw.RoundedBox(0, 0, 0, w, h, boat_soccer_config.neutral)
+    end
 
     -- Player list derma
     local playerList0 = vgui.Create("DListLayout", frame)
