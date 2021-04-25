@@ -1,12 +1,14 @@
 -- Config
 boat_soccer_config = boat_soccer_config or {}
 
--- Team colors
+-- Variables
+boat_soccer_config.maxTeamSize = 5
 boat_soccer_config.winningScore = 9
 boat_soccer_config.matchLength = 300 -- 5 minutes in seconds
 boat_soccer_config.setupLength = 9 -- 5 minutes in seconds
 boat_soccer_config.throwForce = -300000
 
+-- Team colors
 boat_soccer_config.neutral = Color(53, 53, 53, 200)
 boat_soccer_config.text = Color(233, 232, 232, 200)
 boat_soccer_config.team0 = Color(233, 141, 141, 200)

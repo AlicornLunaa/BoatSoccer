@@ -60,10 +60,6 @@ local function IsInGame(ply)
     return false
 end
 
-concommand.Add("bs_test", function(ply)
-    print(IsInGame(ply))
-end )
-
 function ENT:Initialize()
     self:SetModel("models/boat_soccer/arena0.mdl")
     self:PhysicsInit(SOLID_VPHYSICS)
@@ -82,6 +78,34 @@ function ENT:Initialize()
     boat_soccer.controllers[self:EntIndex()].players = {}
     boat_soccer.controllers[self:EntIndex()].gameStarted = false
     boat_soccer.controllers[self:EntIndex()].counting = false
+
+    boat_soccer.controllers[self:EntIndex()].players = {
+        a = {
+            name = "a",
+            team = 0,
+            matchAdmin = false
+        },
+        b = {
+            name = "b",
+            team = 0,
+            matchAdmin = false
+        },
+        c = {
+            name = "c",
+            team = 0,
+            matchAdmin = false
+        },
+        d = {
+            name = "d",
+            team = 0,
+            matchAdmin = false
+        },
+        e = {
+            name = "e",
+            team = 0,
+            matchAdmin = false
+        }
+    }
 
     -- Networked variables
     self:SetNWInt("score0", 0)

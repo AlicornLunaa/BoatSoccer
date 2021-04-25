@@ -81,6 +81,18 @@ surface.CreateFont("bs_font_hud_score", {
 })
 
 -- Functions
+function boat_soccer_client.GetTeamCount(team, id)
+    local count = 0
+
+    for k, v in pairs(boat_soccer_client.controllers[id].players) do
+        if (v.team == team) then
+            count = count + 1
+        end
+    end
+
+    return count
+end
+
 function boat_soccer_client.IsMatchAdmin(id)
     if (boat_soccer_client.controllers[id].players[LocalPlayer():SteamID64()] == nil) then
         return false
