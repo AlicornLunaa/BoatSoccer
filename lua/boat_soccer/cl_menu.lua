@@ -105,6 +105,12 @@ function boat_soccer_client.OpenMenu(id, matchAdmin)
                 startGameButton:Hide()
             end
 
+            if (#boat_soccer_client.controllers[id].players >= 10 and !boat_soccer_client.joined) then
+                joinLeaveButton:SetEnabled(false)
+            else
+                joinLeaveButton:SetEnabled(true)
+            end
+
             if (boat_soccer_client.GetTeamCount(0, id) >= boat_soccer_config.maxTeamSize or boat_soccer_client.GetTeamCount(1, id) >= boat_soccer_config.maxTeamSize) then
                 switchTeamButton:SetEnabled(false)
             else
