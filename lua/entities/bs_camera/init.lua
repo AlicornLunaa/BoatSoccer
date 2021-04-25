@@ -44,7 +44,6 @@ function ENT:Think()
         -- End
         if (self.currentFrame >= #self.frames) then
             self:Remove()
-            print("END")
             return
         end
     end
