@@ -79,7 +79,7 @@ function ENT:Initialize()
     boat_soccer.controllers[self:EntIndex()].gameStarted = false
     boat_soccer.controllers[self:EntIndex()].counting = false
 
-    boat_soccer.controllers[self:EntIndex()].players = {
+    boat_soccer.controllers[self:EntIndex()].players = { -- DEBUG DATA
         a = {
             name = "a",
             team = 0,
@@ -197,9 +197,9 @@ function ENT:StartGame()
             self.resetting = true
             self:SetNWInt("score0", self:GetNWInt("score0", 0) + 1)
 
+            ThrowBoats(self.spawnedBoats, self.bs_ball:GetPos(), boat_soccer_config.throwForce)
             self.bs_ball:GetPhysicsObject():EnableMotion(false)
             self.bs_ball:ScoreAnim()
-            ThrowBoats(self.spawnedBoats, self.bs_ball:GetPos(), boat_soccer_config.throwForce)
 
             timer.Simple(2, function()
                 if (!self:IsValid()) then return end
@@ -216,9 +216,9 @@ function ENT:StartGame()
             self.resetting = true
             self:SetNWInt("score1", self:GetNWInt("score1", 0) + 1)
 
+            ThrowBoats(self.spawnedBoats, self.bs_ball:GetPos(), boat_soccer_config.throwForce)
             self.bs_ball:GetPhysicsObject():EnableMotion(false)
             self.bs_ball:ScoreAnim()
-            ThrowBoats(self.spawnedBoats, self.bs_ball:GetPos(), boat_soccer_config.throwForce)
 
             timer.Simple(2, function()
                 self:ResetRound()
