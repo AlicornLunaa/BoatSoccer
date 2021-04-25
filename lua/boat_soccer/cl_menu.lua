@@ -28,6 +28,10 @@ end
 
 -- API functions
 function boat_soccer_client.OpenMenu(id, matchAdmin)
+    -- Variables
+    local selectedModel = 1
+
+    -- Derma
     local frame = vgui.Create("DFrame")
     frame:SetSize(500, 300)
     frame:Center()
@@ -87,6 +91,47 @@ function boat_soccer_client.OpenMenu(id, matchAdmin)
         boat_soccer_client.StartGame(id)
     end
 
+    local selectedBoatModel = vgui.Create("DModelPanel", frame)
+    selectedBoatModel:SetSize(190, 190)
+    selectedBoatModel:SetPos(305, 75)
+    selectedBoatModel:SetModel(boat_soccer_config.boats[selectedModel].mdl)
+
+    local prevMdlButton = vgui.Create("DButton", frame)
+    prevMdlButton:SetSize(95, 20)
+    prevMdlButton:SetPos(305, 265)
+    prevMdlButton:SetText("<--")
+    prevMdlButton.DoClick = function()
+        selectedModel = math.max(selectedModel - 1, 1)
+        selectedBoatModel:SetModel(boat_soccer_config.boats[selectedModel].mdl)
+    end
+
+    local nextMdlButton = vgui.Create("DButton", frame)
+    nextMdlButton:SetSize(95, 20)
+    nextMdlButton:SetPos(400, 265)
+    nextMdlButton:SetText("-->")
+    nextMdlButton.DoClick = function()
+        selectedModel = math.min(selectedModel + 1, #boat_soccer_config.boats)
+        selectedBoatModel:SetModel(boat_soccer_config.boats[selectedModel].mdl)
+    end
+
+    -- Admin settings
+    local adminPanel = vgui.Create("DPanel", frame)
+    adminPanel:SetSize(500, 200)
+    adminPanel:SetPos(0, 290)
+
+    local timeLabel = vgui.Create("DLabel", adminPanel)
+    timeLabel:SetPos(10, 10)
+    timeLabel:SetText("Match length in seconds: ")
+    timeLabel:SetTextColor(Color(0, 0, 0))
+    timeLabel:SizeToContents()
+
+    local tlw = timeLabel:GetSize()
+    local timeValue = vgui.Create("DNumberWang", adminPanel)
+    timeValue:SetSize(50, 20)
+    timeValue:SetPos(10 + tlw, 7)
+    timeValue:SetMinMax(10, 1800)
+    timeValue:SetValue(boat_soccer_config.matchLengthDefault)
+
     hook.Add("boat_soccer:reload_derma", "Reload Derma", function()
         if (!frame:IsValid()) then
             hook.Remove("boat_soccer:reload_derma", "Reload Derma")
@@ -99,9 +144,19 @@ function boat_soccer_client.OpenMenu(id, matchAdmin)
                 switchTeamButton:Hide()
             end
 
-            if (boat_soccer_client.IsMatchAdmin(id) and boat_soccer_client.controllers[id].gameStarted == false) then
-                startGameButton:Show()
+            if (boat_soccer_client.IsMatchAdmin(id)) then
+                frame:SetSize(500, 490)
+                frame:Center()
+                adminPanel:Show()
+
+                if (boat_soccer_client.controllers[id].gameStarted == false) then
+                    startGameButton:Show()
+                end
             else
+                frame:SetSize(500, 300)
+                frame:Center()
+
+                adminPanel:Hide()
                 startGameButton:Hide()
             end
 
@@ -115,6 +170,18 @@ function boat_soccer_client.OpenMenu(id, matchAdmin)
                 switchTeamButton:SetEnabled(false)
             else
                 switchTeamButton:SetEnabled(true)
+            end
+
+            if (selectedModel <= 1) then
+                prevMdlButton:SetEnabled(false)
+            else
+                prevMdlButton:SetEnabled(true)
+            end
+
+            if (selectedModel >= #boat_soccer_config.boats) then
+                nextMdlButton:SetEnabled(false)
+            else
+                nextMdlButton:SetEnabled(true)
             end
         end
     end )

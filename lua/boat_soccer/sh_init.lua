@@ -10,6 +10,20 @@ boat_soccer_config.throwForce = 300000
 boat_soccer_config.boostDrain = 0.67
 boat_soccer_config.boostRegen = 0.1
 
+-- Available boats
+boat_soccer_config.boats = {
+    {
+        class = "bs_boat",
+        name = "Classic",
+        mdl = "models/props_canal/boat002b.mdl"
+    },
+    {
+        class = "bs_boat",
+        name = "Dev test",
+        mdl = "models/props_borealis/bluebarrel001.mdl"
+    }
+}
+
 -- Team colors
 boat_soccer_config.neutral = Color(53, 53, 53, 200)
 boat_soccer_config.text = Color(233, 232, 232, 200)
