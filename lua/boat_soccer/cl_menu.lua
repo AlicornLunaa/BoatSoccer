@@ -130,7 +130,70 @@ function boat_soccer_client.OpenMenu(id, matchAdmin)
     timeValue:SetSize(50, 20)
     timeValue:SetPos(10 + tlw, 7)
     timeValue:SetMinMax(10, 1800)
-    timeValue:SetValue(boat_soccer_config.matchLengthDefault)
+    timeValue:SetValue(boat_soccer_client.controllers[id].settings.matchLength)
+    timeValue.OnValueChanged = function(val)
+        boat_soccer_client.UpdateGameSettings(id, val:GetValue(), nil, nil, nil)
+    end
+
+    local scoreLabel = vgui.Create("DLabel", adminPanel)
+    scoreLabel:SetPos(10, 35)
+    scoreLabel:SetText("Number of scores to win: ")
+    scoreLabel:SetTextColor(Color(0, 0, 0))
+    scoreLabel:SizeToContents()
+
+    local scoreValue = vgui.Create("DNumberWang", adminPanel)
+    scoreValue:SetSize(50, 20)
+    scoreValue:SetPos(10 + tlw, 32)
+    scoreValue:SetMinMax(1, 20)
+    scoreValue:SetValue(boat_soccer_client.controllers[id].settings.winningScore)
+    scoreValue.OnValueChanged = function(val)
+        boat_soccer_client.UpdateGameSettings(id, nil, val:GetValue(), nil, nil)
+    end
+
+    local drainLabel = vgui.Create("DLabel", adminPanel)
+    drainLabel:SetPos(10, 60)
+    drainLabel:SetText("Boost drain speed: ")
+    drainLabel:SetTextColor(Color(0, 0, 0))
+    drainLabel:SizeToContents()
+
+    local drainValue = vgui.Create("DNumberWang", adminPanel)
+    drainValue:SetSize(50, 20)
+    drainValue:SetPos(10 + tlw, 57)
+    drainValue:SetMinMax(0, 20)
+    drainValue:SetValue(boat_soccer_client.controllers[id].settings.boostDrain)
+    drainValue.OnValueChanged = function(val)
+        boat_soccer_client.UpdateGameSettings(id, nil, nil, val:GetValue(), nil)
+    end
+
+    local regenLabel = vgui.Create("DLabel", adminPanel)
+    regenLabel:SetPos(10, 85)
+    regenLabel:SetText("Boost regen speed: ")
+    regenLabel:SetTextColor(Color(0, 0, 0))
+    regenLabel:SizeToContents()
+
+    local regenValue = vgui.Create("DNumberWang", adminPanel)
+    regenValue:SetSize(50, 20)
+    regenValue:SetPos(10 + tlw, 82)
+    regenValue:SetMinMax(0, 20)
+    regenValue:SetValue(boat_soccer_client.controllers[id].settings.boostRegen)
+    regenValue.OnValueChanged = function(val)
+        boat_soccer_client.UpdateGameSettings(id, nil, nil, nil, val:GetValue())
+    end
+
+    local multLabel = vgui.Create("DLabel", adminPanel)
+    multLabel:SetPos(10, 110)
+    multLabel:SetText("Boost speed multiplier: ")
+    multLabel:SetTextColor(Color(0, 0, 0))
+    multLabel:SizeToContents()
+
+    local multValue = vgui.Create("DNumberWang", adminPanel)
+    multValue:SetSize(50, 20)
+    multValue:SetPos(10 + tlw, 107)
+    multValue:SetMinMax(-200, 200)
+    multValue:SetValue(boat_soccer_client.controllers[id].settings.boostMultiply)
+    multValue.OnValueChanged = function(val)
+        boat_soccer_client.UpdateGameSettings(id, nil, nil, nil, nil, val:GetValue())
+    end
 
     hook.Add("boat_soccer:reload_derma", "Reload Derma", function()
         if (!frame:IsValid()) then

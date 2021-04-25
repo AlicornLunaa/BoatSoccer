@@ -34,6 +34,12 @@ function ENT:ExitBoat(activator)
     self:SetNWBool("driving", false)
 end
 
+function ENT:SetValues(drain, regen, multiplier)
+    self.boostDrain = drain
+    self.boostRegen = regen
+    self.boostMultiply = multiplier
+end
+
 -- Entity functions
 function ENT:Initialize()
     -- Initialize entity
@@ -50,6 +56,9 @@ function ENT:Initialize()
     self.turnSpeed = 1
     self.jumpForce = 500
     self.multiplier = 1
+    self.boostMultiply = 3
+    self.boostDrain = 1
+    self.boostRegen = 1
     self.team = -1
     self.camera = nil
     self.boosting = false
@@ -112,7 +121,7 @@ function ENT:Think()
 
             if (self.driver:KeyDown(IN_SPEED) and self:GetNWFloat("boost", 0) > 0) then
                 -- Boost
-                self.multiplier = 3
+                self.multiplier = self.boostMultiply
 
                 if (self:GetNWFloat("boost", 0) >= 1) then
                     if (self.boosting == false) then
@@ -122,7 +131,7 @@ function ENT:Think()
                     self.trail:SetKeyValue("Lifetime", tostring(self:GetVelocity():Length() / 300))
                 end
 
-                self:SetNWFloat("boost", math.max(self:GetNWFloat("boost", 0) - boat_soccer_config.boostDrain, 0))
+                self:SetNWFloat("boost", math.max(self:GetNWFloat("boost", 0) - self.boostDrain, 0))
                 self.boosting = true
             else
                 self.multiplier = 1
@@ -131,7 +140,7 @@ function ENT:Think()
                     self.trail:Remove()
                 end
 
-                self:SetNWFloat("boost", math.min(self:GetNWFloat("boost", 0) + boat_soccer_config.boostRegen, 100))
+                self:SetNWFloat("boost", math.min(self:GetNWFloat("boost", 0) + self.boostRegen, 100))
                 self.boosting = false
             end
 

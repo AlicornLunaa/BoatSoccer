@@ -123,7 +123,7 @@ function boat_soccer_client.Join(id)
     boat_soccer_client.joined = id
 
     net.Start("boat_soccer:join")
-        net.WriteInt(id, 8)
+        net.WriteInt(id, 32)
     net.SendToServer()
 end
 
@@ -131,20 +131,31 @@ function boat_soccer_client.Leave(id)
     boat_soccer_client.joined = false
 
     net.Start("boat_soccer:leave")
-        net.WriteInt(id, 8)
+        net.WriteInt(id, 32)
     net.SendToServer()
 end
 
 function boat_soccer_client.SwitchTeam(id)
     if (boat_soccer_client.joined) then
         net.Start("boat_soccer:switch_team")
-            net.WriteInt(id, 8)
+            net.WriteInt(id, 32)
         net.SendToServer()
     end
 end
 
 function boat_soccer_client.StartGame(id)
     net.Start("boat_soccer:start_game")
-        net.WriteInt(id, 8)
+        net.WriteInt(id, 32)
+    net.SendToServer()
+end
+
+function boat_soccer_client.UpdateGameSettings(id, matchLength, winningScore, boostDrain, boostRegen, boostMult)
+    net.Start("boat_soccer:update_settings")
+        net.WriteInt(id, 32)
+        net.WriteInt(matchLength or boat_soccer_client.controllers[id].settings.matchLength, 32)
+        net.WriteInt(winningScore or boat_soccer_client.controllers[id].settings.winningScore, 32)
+        net.WriteFloat(boostDrain or boat_soccer_client.controllers[id].settings.boostDrain)
+        net.WriteFloat(boostRegen or boat_soccer_client.controllers[id].settings.boostRegen)
+        net.WriteFloat(boostMult or boat_soccer_client.controllers[id].settings.boostMultiply)
     net.SendToServer()
 end

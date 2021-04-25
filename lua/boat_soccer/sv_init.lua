@@ -56,6 +56,14 @@ function boat_soccer.StartGame(id)
     boat_soccer.controllers[id].entity:StartGame()
 end
 
+function boat_soccer.UpdateGameSettings(id, matchLength, winningScore, boostDrain, boostRegen, boostMult)
+    boat_soccer.controllers[id].settings.matchLength = matchLength
+    boat_soccer.controllers[id].settings.winningScore = winningScore
+    boat_soccer.controllers[id].settings.boostDrain = boostDrain
+    boat_soccer.controllers[id].settings.boostRegen = boostRegen
+    boat_soccer.controllers[id].settings.boostMultiply = boostMult
+end
+
 -- Hooks
 hook.Add("PhysgunPickup", "boat_soccer:allowpickup", function(ply, ent)
     -- Disable pickup for started arenas

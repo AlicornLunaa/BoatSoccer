@@ -78,13 +78,19 @@ function ENT:Initialize()
     boat_soccer.controllers[self:EntIndex()].players = {}
     boat_soccer.controllers[self:EntIndex()].gameStarted = false
     boat_soccer.controllers[self:EntIndex()].counting = false
+    boat_soccer.controllers[self:EntIndex()].settings = {
+        winningScore = boat_soccer_config.winningScoreDefault,
+        matchLength = boat_soccer_config.matchLengthDefault,
+        boostDrain = boat_soccer_config.boostDrainDefault,
+        boostRegen = boat_soccer_config.boostRegenDefault,
+        boostMultiply = boat_soccer_config.boostMultiplyDefault
+    }
 
     -- Networked variables
     self:SetNWInt("score0", 0)
     self:SetNWInt("score1", 0)
     self:SetNWInt("round", 1)
     self:SetNWInt("winner", -1)
-    self:SetNWFloat("matchStartTime", SysTime())
 
     -- Phys init
     local phys = self:GetPhysicsObject()
@@ -92,6 +98,10 @@ function ENT:Initialize()
         phys:SetMass(1000)
         phys:Wake()
     end
+end
+
+function ENT:GetSettings()
+    return boat_soccer.controllers[self:EntIndex()].settings
 end
 
 function ENT:Use( activator, caller )
@@ -199,7 +209,7 @@ function ENT:StartGame()
     end )
 
     -- Round timer
-    timer.Create("roundTime", boat_soccer_config.matchLength, 1, function()
+    timer.Create("roundTime", self:GetSettings().matchLength, 1, function()
         -- End round
         boat_soccer.controllers[self:EntIndex()].counting = false
         self.resetting = true
@@ -253,6 +263,7 @@ function ENT:StartGame()
         self.spawnedBoats[#self.spawnedBoats]:Spawn()
         self.spawnedBoats[#self.spawnedBoats]:GetPhysicsObject():EnableMotion(false)
         self.spawnedBoats[#self.spawnedBoats]:BSSetTeam(v.team)
+        self.spawnedBoats[#self.spawnedBoats]:SetValues(self:GetSettings().boostDrain, self:GetSettings().boostRegen, self:GetSettings().boostMultiply)
         self.spawnedBoats[#self.spawnedBoats]:Use(player.GetBySteamID64(k))
     end
 
@@ -339,13 +350,13 @@ end
 
 function ENT:CheckScore()
     -- Checks score to see if anyone has won
-    if (self:GetNWInt("score0", 0) >= boat_soccer_config.winningScore) then
+    if (self:GetNWInt("score0", 0) >= self:GetSettings().winningScore) then
         -- Team 0 has won
         self:SetNWInt("winner", 0)
         self:EndGame()
 
         return true
-    elseif (self:GetNWInt("score1", 0) >= boat_soccer_config.winningScore) then
+    elseif (self:GetNWInt("score1", 0) >= self:GetSettings().winningScore) then
         -- Team 1 has won
         self:SetNWInt("winner", 1)
         self:EndGame()
