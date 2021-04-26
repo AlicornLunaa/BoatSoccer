@@ -40,11 +40,8 @@ function ENT:SetValues(drain, regen, multiplier)
     self.boostMultiply = multiplier
 end
 
--- Entity functions
-function ENT:Initialize()
-    -- Initialize entity
-    self:SetModel("models/props_canal/boat002b.mdl")
-    self:SetModelScale(0.25, 0)
+function ENT:InitializeData()
+    -- Phys settings
     self:PhysicsInit(SOLID_VPHYSICS)
     self:SetMoveType(MOVETYPE_VPHYSICS)
     self:SetSolid(SOLID_VPHYSICS)
@@ -67,6 +64,14 @@ function ENT:Initialize()
     -- Networked variables
     self:SetNWBool("driving", false)
     self:SetNWFloat("boost", 33)
+end
+
+-- Entity functions
+function ENT:Initialize()
+    -- Initialize entity
+    self:SetModel("models/props_canal/boat002b.mdl")
+    self:SetModelScale(0.25, 0)
+    self:InitializeData()
 
     -- Start physics
     local phys = self:GetPhysicsObject()

@@ -14,12 +14,12 @@ boat_soccer_config.boostMultiplyDefault = 3
 -- Available boats
 boat_soccer_config.boats = {
     {
-        class = "bs_boat",
+        class = "bs_boat_classic",
         name = "Classic",
         mdl = "models/props_canal/boat002b.mdl"
     },
     {
-        class = "bs_boat",
+        class = "bs_boat_dev",
         name = "Dev test",
         mdl = "models/props_borealis/bluebarrel001.mdl"
     }

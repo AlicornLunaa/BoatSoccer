@@ -70,7 +70,7 @@ function boat_soccer_client.OpenMenu(id, matchAdmin)
             boat_soccer_client.Leave(id)
             joinLeaveButton:SetText("Join game")
         else
-            boat_soccer_client.Join(id)
+            boat_soccer_client.Join(id, selectedModel)
             joinLeaveButton:SetText("Leave game")
         end
     end
@@ -103,6 +103,7 @@ function boat_soccer_client.OpenMenu(id, matchAdmin)
     prevMdlButton.DoClick = function()
         selectedModel = math.max(selectedModel - 1, 1)
         selectedBoatModel:SetModel(boat_soccer_config.boats[selectedModel].mdl)
+        boat_soccer_client.Join(id, selectedModel)
     end
 
     local nextMdlButton = vgui.Create("DButton", frame)
@@ -112,6 +113,7 @@ function boat_soccer_client.OpenMenu(id, matchAdmin)
     nextMdlButton.DoClick = function()
         selectedModel = math.min(selectedModel + 1, #boat_soccer_config.boats)
         selectedBoatModel:SetModel(boat_soccer_config.boats[selectedModel].mdl)
+        boat_soccer_client.Join(id, selectedModel)
     end
 
     -- Admin settings

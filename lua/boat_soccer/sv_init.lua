@@ -22,7 +22,7 @@ function boat_soccer.IsStarted(id)
     return boat_soccer.controllers[id].gameStarted
 end
 
-function boat_soccer.AddPlayer(ply, id)
+function boat_soccer.AddPlayer(ply, id, boatSelection)
     -- Adds player to the controller with that id
     local ma = (#boat_soccer.controllers[id].players == 0)
     local t = 0
@@ -34,6 +34,7 @@ function boat_soccer.AddPlayer(ply, id)
     boat_soccer.controllers[id].players[ply:SteamID64()] = {
         name = ply:Nick(),
         team = t,
+        boatType = boatSelection,
         matchAdmin = ma
     }
 end

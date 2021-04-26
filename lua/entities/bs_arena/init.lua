@@ -256,7 +256,7 @@ function ENT:StartGame()
         ang.p = 0
         ang.r = 0
 
-        self.spawnedBoats[#self.spawnedBoats + 1] = ents.Create("bs_boat")
+        self.spawnedBoats[#self.spawnedBoats + 1] = ents.Create(boat_soccer_config.boats[v.boatType].class)
         self.spawnedBoats[#self.spawnedBoats]:SetPos(pos)
         self.spawnedBoats[#self.spawnedBoats]:SetAngles(ang)
         self.spawnedBoats[#self.spawnedBoats]:SetColor(color)
