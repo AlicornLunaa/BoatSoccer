@@ -11,18 +11,8 @@ function ENT:Initialize()
     -- Initialize entity
     self:SetModel("models/props_canal/boat002b.mdl")
     self:SetModelScale(0.25, 0)
-    self:PhysicsInit(SOLID_VPHYSICS)
-    self:SetMoveType(MOVETYPE_VPHYSICS)
-    self:SetSolid(SOLID_VPHYSICS)
-    self:SetUseType(SIMPLE_USE)
     self:InitializeData()
-
-    -- Start physics
-    local phys = self:GetPhysicsObject()
-    if (phys:IsValid()) then
-        phys:SetMass(100)
-        phys:Wake()
-    end
-
-    self:Activate()
+    self.offset = Angle(0, 0, 0)
+    self.bs_buoyancy = 7
+    self:InitPhys()
 end

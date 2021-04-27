@@ -7,6 +7,16 @@ include("shared.lua")
 include("boat_soccer/sh_init.lua")
 
 -- Helper functions
+local function coefficient(number)
+    if (number < 0) then
+        return -1
+    elseif (number > 0) then
+        return 1
+    else
+        return 0
+    end
+end
+
 local function applyTorque(ent, force)
     local phys = ent:GetPhysicsObject()
     local direction = phys:LocalToWorld(force) - ent:GetPos()
@@ -56,14 +66,29 @@ function ENT:InitializeData()
     self.boostMultiply = 3
     self.boostDrain = 1
     self.boostRegen = 1
+    self.bs_buoyancy = 1
+    self.offset = Angle(0, 0, 0)
     self.team = -1
     self.camera = nil
     self.boosting = false
     self.trail = nil
+    self.lastPosition = self:GetPos()
 
     -- Networked variables
     self:SetNWBool("driving", false)
     self:SetNWFloat("boost", 33)
+end
+
+function ENT:InitPhys()
+    -- Start physics
+    local phys = self:GetPhysicsObject()
+    if (phys:IsValid()) then
+        phys:SetMass(100)
+        phys:SetBuoyancyRatio(self.bs_buoyancy)
+        phys:Wake()
+    end
+
+    self:Activate()
 end
 
 -- Entity functions
@@ -72,15 +97,7 @@ function ENT:Initialize()
     self:SetModel("models/props_canal/boat002b.mdl")
     self:SetModelScale(0.25, 0)
     self:InitializeData()
-
-    -- Start physics
-    local phys = self:GetPhysicsObject()
-    if (phys:IsValid()) then
-        phys:SetMass(100)
-        phys:Wake()
-    end
-
-    self:Activate()
+    self:InitPhys()
 end
 
 function ENT:Use( activator )
@@ -106,22 +123,24 @@ function ENT:Think()
     if (self.driver) then
         -- Movement
         local phys = self:GetPhysicsObject()
+        local forward = (self:GetAngles() - self.offset):Forward()
+        local right = (self:GetAngles() - self.offset):Right()
 
         if (self:WaterLevel() >= 1) then
             if (self.driver:KeyDown(IN_FORWARD)) then
-                phys:ApplyForceCenter(self:GetForward() * self.speed * self.multiplier)
+                phys:ApplyForceCenter(forward * self.speed * self.multiplier)
             end
 
             if (self.driver:KeyDown(IN_BACK)) then
-                phys:ApplyForceCenter(self:GetForward() * -self.speed * self.multiplier)
+                phys:ApplyForceCenter(forward * -self.speed * self.multiplier)
             end
 
             if (self.driver:KeyDown(IN_MOVELEFT)) then
-                phys:ApplyForceCenter(self:GetRight() * -self.speed / self.multiplier)
+                phys:ApplyForceCenter(right * -self.speed / self.multiplier)
             end
 
             if (self.driver:KeyDown(IN_MOVERIGHT)) then
-                phys:ApplyForceCenter(self:GetRight() * self.speed / self.multiplier)
+                phys:ApplyForceCenter(right * self.speed / self.multiplier)
             end
 
             if (self.driver:KeyDown(IN_SPEED) and self:GetNWFloat("boost", 0) > 0) then
@@ -156,11 +175,15 @@ function ENT:Think()
         end
 
         -- Set angles
+        local movementDirection = coefficient((self:GetPos() * forward - self.lastPosition * forward):GetNormalized().x)
+        self.lastPosition = self:GetPos()
+
+        local forwardVel = (self:GetVelocity() * forward):Length() / 8 * movementDirection
         local rotationScale = self:GetVelocity():Length() / 500
-        local _, localAng = WorldToLocal(self:GetPos(), self:GetAngles(), self.driver:GetPos(), self.driver:EyeAngles())
+        local _, localAng = WorldToLocal(self:GetPos(), self:GetAngles(), self.driver:GetPos(), self.driver:EyeAngles() + self.offset)
         localAng.y = math.Clamp(localAng.y + (self:GetPhysicsObject():GetAngleVelocity() * 0.1).z, -45, 45) / self.multiplier
-        localAng.z = math.Clamp(self:GetAngles().z + (self:GetPhysicsObject():GetAngleVelocity() * 0.1).x, -45, 45)
-        applyTorque(self, Vector(-localAng.z * 0.5, 0, localAng.y * -10 * rotationScale) * phys:GetMass())
+        localAng.z = math.Clamp(self:GetAngles().z + (self:GetPhysicsObject():GetAngleVelocity() * 0.1).x, -45, 45) * 5
+        applyTorque(self, Vector(-localAng.z * 0.5, -forwardVel, localAng.y * -10 * rotationScale) * phys:GetMass())
 
         -- Vehicle exit
         if (self.driver:KeyPressed(IN_USE)) then

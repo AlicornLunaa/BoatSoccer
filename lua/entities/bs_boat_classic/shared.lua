@@ -6,5 +6,5 @@ ENT.Author = "AlicornLunaa"
 ENT.Spawnable = true
 ENT.Category = "Boat soccer"
 
-ENT.Purpose = "A controllable boat for a game of boat soccer"
+ENT.Purpose = "A classic boat from the alpha of the addon"
 ENT.Instructions = "Spawning this alone, it will act just like a vehicle. Spawn a controller to use this in a game."

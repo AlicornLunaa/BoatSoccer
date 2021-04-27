@@ -9,16 +9,9 @@ include("boat_soccer/sh_init.lua")
 -- Entity functions
 function ENT:Initialize()
     -- Initialize entity
-    self:SetModel("models/props_borealis/bluebarrel001.mdl")
-    self:SetModelScale(0.25, 0)
+    self:SetModel("models/boat_soccer/boat.mdl")
     self:InitializeData()
-
-    -- Start physics
-    local phys = self:GetPhysicsObject()
-    if (phys:IsValid()) then
-        phys:SetMass(100)
-        phys:Wake()
-    end
-
-    self:Activate()
+    self.offset = Angle(0, 0, 0)
+    self.bs_buoyancy = 3
+    self:InitPhys()
 end

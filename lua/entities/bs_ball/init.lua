@@ -59,18 +59,3 @@ function ENT:ScoreAnim()
 
     self:SetPos(Vector(0, 0, 0))
 end
-
--- Hooks
-local function FixBuoyancy(_, ent)
-    if (ent:IsValid() and ent.bs_buoyancy) then
-        local phys = ent:GetPhysicsObject()
-
-        if (phys:IsValid()) then
-            timer.Simple(0, function()
-                phys:SetBuoyancyRatio(ent.bs_buoyancy)
-            end )
-        end
-    end
-end
-hook.Add("PhysgunDrop", "boat_soccer:fix_buoyancy", FixBuoyancy)
-hook.Add("GravGunOnDropped", "boat_soccer:fix_buoyancy", FixBuoyancy)

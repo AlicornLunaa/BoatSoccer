@@ -19,9 +19,9 @@ boat_soccer_config.boats = {
         mdl = "models/props_canal/boat002b.mdl"
     },
     {
-        class = "bs_boat_dev",
-        name = "Dev test",
-        mdl = "models/props_borealis/bluebarrel001.mdl"
+        class = "bs_boat_default",
+        name = "Default",
+        mdl = "models/boat_soccer/boat.mdl"
     }
 }
 

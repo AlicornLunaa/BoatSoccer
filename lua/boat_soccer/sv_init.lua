@@ -72,9 +72,23 @@ hook.Add("PhysgunPickup", "boat_soccer:allowpickup", function(ply, ent)
         return !boat_soccer.IsStarted(ent:EntIndex())
     elseif (ent.ClassName == "bs_ball") then
         return false
-    elseif (ent.ClassName == "bs_boat") then
+    elseif (ent.Base == "bs_boat_base") then
         return ent.team == -1
     end
 
     return true
 end )
+
+local function FixBuoyancy(_, ent)
+    if (ent:IsValid() and ent.bs_buoyancy) then
+        local phys = ent:GetPhysicsObject()
+
+        if (phys:IsValid()) then
+            timer.Simple(0, function()
+                phys:SetBuoyancyRatio(ent.bs_buoyancy)
+            end )
+        end
+    end
+end
+hook.Add("PhysgunDrop", "boat_soccer:fix_buoyancy", FixBuoyancy)
+hook.Add("GravGunOnDropped", "boat_soccer:fix_buoyancy", FixBuoyancy)
