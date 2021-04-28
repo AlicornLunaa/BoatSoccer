@@ -20,8 +20,8 @@ boat_soccer_config.boats = {
     },
     {
         class = "bs_boat_default",
-        name = "Default",
-        mdl = "models/boat_soccer/boat.mdl"
+        name = "Speedboat",
+        mdl = "models/boat_soccer/speedboat.mdl"
     }
 }
 

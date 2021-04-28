@@ -9,7 +9,7 @@ include("boat_soccer/sh_init.lua")
 -- Entity functions
 function ENT:Initialize()
     -- Initialize entity
-    self:SetModel("models/boat_soccer/boat.mdl")
+    self:SetModel("models/boat_soccer/speedboat.mdl")
     self:InitializeData()
     self.offset = Angle(0, 0, 0)
     self.bs_buoyancy = 3
