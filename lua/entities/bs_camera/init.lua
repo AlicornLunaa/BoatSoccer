@@ -43,7 +43,6 @@ function ENT:Think()
         end
 
         -- End
-        print(self.parent)
         if (self.currentFrame >= #self.frames or !self.parent:IsValid()) then
             self:Remove()
             return

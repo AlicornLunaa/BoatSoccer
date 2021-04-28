@@ -126,6 +126,7 @@ function ENT:Draw()
                         timer.Simple(i, function()
                             if (!self:IsValid()) then return end
                             self.time = self.time - 1
+                            print(self.time)
                         end )
                     end
 

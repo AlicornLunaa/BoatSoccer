@@ -22,12 +22,12 @@ function ENT:Initialize()
     end
 end
 
-function ENT:PhysicsCollide(data, phys)
+function ENT:PhysicsCollide(data, obj)
     -- Set color of the ball to the last team who touched it
     if (data.HitEntity.Base == "bs_boat_base") then
         local phys = self:GetPhysicsObject()
         if (phys:IsValid()) then
-            phys:AddVelocity(data.OurNewVelocity * 1.5)
+            phys:AddVelocity(data.OurNewVelocity * 1.25)
         end
 
         local team = data.HitEntity.team
@@ -62,7 +62,4 @@ function ENT:ScoreAnim()
     explosion:Fire("Explode", 0, 0)
 
     self:SetPos(Vector(0, 0, 0))
-end
-
-function ENT:PhysicsCollide(data, obj)
 end
