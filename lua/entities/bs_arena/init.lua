@@ -146,7 +146,9 @@ function ENT:OnRemove()
 
     -- Delete every boat
     for k, v in pairs(self.spawnedBoats) do
-        v:Remove()
+        if (v:IsValid()) then
+            v:Remove()
+        end
     end
 
     -- Remove goals and ball

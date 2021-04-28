@@ -24,9 +24,13 @@ end
 
 function ENT:PhysicsCollide(data, phys)
     -- Set color of the ball to the last team who touched it
-    if (data.HitEntity.ClassName == "bs_boat") then
-        local team = data.HitEntity.team
+    if (data.HitEntity.Base == "bs_boat_base") then
+        local phys = self:GetPhysicsObject()
+        if (phys:IsValid()) then
+            phys:AddVelocity(data.OurNewVelocity * 1.5)
+        end
 
+        local team = data.HitEntity.team
         if (team == 0) then
             self.trailEnt:SetKeyValue("rendercolor", string.format("%d %d %d", boat_soccer_config.team0.r, boat_soccer_config.team0.g, boat_soccer_config.team0.b))
             self:SetColor(boat_soccer_config.team0)
@@ -58,4 +62,7 @@ function ENT:ScoreAnim()
     explosion:Fire("Explode", 0, 0)
 
     self:SetPos(Vector(0, 0, 0))
+end
+
+function ENT:PhysicsCollide(data, obj)
 end

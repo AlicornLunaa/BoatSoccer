@@ -5,6 +5,9 @@ boat_soccer.controllers = {}
 include("sv_network.lua")
 include("sh_init.lua")
 
+-- Convars
+CreateConVar("bs_pickup_disabled", 0, FCVAR_NONE, "Whether or not you can pickup entities in a game", 0, 1)
+
 -- Functions
 function boat_soccer.GetTeamCount(team, id)
     local count = 0
@@ -67,6 +70,8 @@ end
 
 -- Hooks
 hook.Add("PhysgunPickup", "boat_soccer:allowpickup", function(ply, ent)
+    if (!GetConVar("bs_pickup_disabled"):GetBool()) then return true end
+
     -- Disable pickup for started arenas
     if (ent.ClassName == "bs_arena") then
         return !boat_soccer.IsStarted(ent:EntIndex())
@@ -83,11 +88,11 @@ local function FixBuoyancy(_, ent)
     if (ent:IsValid() and ent.bs_buoyancy) then
         local phys = ent:GetPhysicsObject()
 
-        if (phys:IsValid()) then
-            timer.Simple(0, function()
+        timer.Simple(0, function()
+            if (phys:IsValid()) then
                 phys:SetBuoyancyRatio(ent.bs_buoyancy)
-            end )
-        end
+            end
+        end )
     end
 end
 hook.Add("PhysgunDrop", "boat_soccer:fix_buoyancy", FixBuoyancy)
