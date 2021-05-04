@@ -31,7 +31,7 @@ local function DrawScoreboard(pos, ang, scale, players, score0, score1)
     cam.End3D2D()
 end
 
-local function DrawHUD(time, winner, score0, score1, matchTime)
+local function DrawHUD(time, winner, score0, score1, matchTime, ot)
     local out = false
     local oldW, oldH = ScrW(), ScrH()
     render.SetViewPort(oldW / 2 - 250, 0, 500, 500)
@@ -67,6 +67,10 @@ local function DrawHUD(time, winner, score0, score1, matchTime)
         draw.DrawText(tostring(score0), "bs_font_hud_score", 100, -8, boat_soccer_config.team0, TEXT_ALIGN_TOP)
         draw.DrawText(tostring(score1), "bs_font_hud_score", 370, -8, boat_soccer_config.team1, TEXT_ALIGN_TOP)
         draw.DrawText(string.format("%d:%02d", matchTime / 60, matchTime % 60), "bs_font_hud_score", 250, -9, boat_soccer_config.text, TEXT_ALIGN_CENTER)
+
+        if (ot) then
+            draw.DrawText("Overtime", "bs_font_hud_name", 250, 55, boat_soccer_config.text, TEXT_ALIGN_CENTER)
+        end
     cam.End2D()
 
     render.SetViewPort(0, 0, oldW, oldH)
@@ -126,7 +130,6 @@ function ENT:Draw()
                         timer.Simple(i, function()
                             if (!self:IsValid()) then return end
                             self.time = self.time - 1
-                            print(self.time)
                         end )
                     end
 
@@ -138,7 +141,7 @@ function ENT:Draw()
                 end
             end
 
-            if (DrawHUD(self.time, self:GetNWInt("winner", -1), self:GetNWInt("score0", 0), self:GetNWInt("score1", 0), matchTime)) then
+            if (DrawHUD(self.time, self:GetNWInt("winner", -1), self:GetNWInt("score0", 0), self:GetNWInt("score1", 0), matchTime, self:GetNWBool("overtime", false))) then
                 -- Reset game
                 self.lastGameStarted = false
                 self.matchStartTime = SysTime() + self:GetSettings().matchLength + 1
