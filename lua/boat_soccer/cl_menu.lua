@@ -134,7 +134,7 @@ function boat_soccer_client.OpenMenu(id, matchAdmin)
     timeValue:SetMinMax(10, 1800)
     timeValue:SetValue(boat_soccer_client.controllers[id].settings.matchLength)
     timeValue.OnValueChanged = function(val)
-        boat_soccer_client.UpdateGameSettings(id, val:GetValue(), nil, nil, nil)
+        boat_soccer_client.UpdateGameSettings(id, math.Clamp(val:GetValue(), val:GetMin(), val:GetMax()), nil, nil, nil)
     end
 
     local scoreLabel = vgui.Create("DLabel", adminPanel)
@@ -149,7 +149,7 @@ function boat_soccer_client.OpenMenu(id, matchAdmin)
     scoreValue:SetMinMax(1, 20)
     scoreValue:SetValue(boat_soccer_client.controllers[id].settings.winningScore)
     scoreValue.OnValueChanged = function(val)
-        boat_soccer_client.UpdateGameSettings(id, nil, val:GetValue(), nil, nil)
+        boat_soccer_client.UpdateGameSettings(id, nil, math.Clamp(val:GetValue(), val:GetMin(), val:GetMax()), nil, nil)
     end
 
     local drainLabel = vgui.Create("DLabel", adminPanel)
@@ -164,7 +164,7 @@ function boat_soccer_client.OpenMenu(id, matchAdmin)
     drainValue:SetMinMax(0, 20)
     drainValue:SetValue(boat_soccer_client.controllers[id].settings.boostDrain)
     drainValue.OnValueChanged = function(val)
-        boat_soccer_client.UpdateGameSettings(id, nil, nil, val:GetValue(), nil)
+        boat_soccer_client.UpdateGameSettings(id, nil, nil, math.Clamp(val:GetValue(), val:GetMin(), val:GetMax()), nil)
     end
 
     local regenLabel = vgui.Create("DLabel", adminPanel)
@@ -179,7 +179,7 @@ function boat_soccer_client.OpenMenu(id, matchAdmin)
     regenValue:SetMinMax(0, 20)
     regenValue:SetValue(boat_soccer_client.controllers[id].settings.boostRegen)
     regenValue.OnValueChanged = function(val)
-        boat_soccer_client.UpdateGameSettings(id, nil, nil, nil, val:GetValue())
+        boat_soccer_client.UpdateGameSettings(id, nil, nil, nil, math.Clamp(val:GetValue(), val:GetMin(), val:GetMax()))
     end
 
     local multLabel = vgui.Create("DLabel", adminPanel)
@@ -194,7 +194,7 @@ function boat_soccer_client.OpenMenu(id, matchAdmin)
     multValue:SetMinMax(-200, 200)
     multValue:SetValue(boat_soccer_client.controllers[id].settings.boostMultiply)
     multValue.OnValueChanged = function(val)
-        boat_soccer_client.UpdateGameSettings(id, nil, nil, nil, nil, val:GetValue())
+        boat_soccer_client.UpdateGameSettings(id, nil, nil, nil, nil, math.Clamp(val:GetValue(), val:GetMin(), val:GetMax()))
     end
 
     hook.Add("boat_soccer:reload_derma", "Reload Derma", function()
