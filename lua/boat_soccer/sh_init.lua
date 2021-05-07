@@ -27,6 +27,11 @@ boat_soccer_config.boats = {
         class = "bs_boat_fish",
         name = "Fisherman's Boat",
         mdl = "models/boat_soccer/fishermanboat.mdl"
+    },
+    {
+        class = "bs_boat_pontoon",
+        name = "Pontoon",
+        mdl = "models/boat_soccer/pontoon.mdl"
     }
 }
 

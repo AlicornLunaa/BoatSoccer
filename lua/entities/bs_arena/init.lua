@@ -206,6 +206,7 @@ function ENT:StartGame()
             self.bs_ball:ScoreAnim()
 
             timer.Simple(2, function()
+                if (!self:IsValid()) then return end
                 self:ResetRound()
             end )
         end
