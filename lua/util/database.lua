@@ -1,2 +1,0 @@
--- Database utilities
--- Contains functions that help with communication to the local database
