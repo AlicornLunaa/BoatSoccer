@@ -119,9 +119,8 @@ function ENT:Use( activator, caller )
 end
 
 function ENT:SpawnFunction(ply, tr, className)
-    PrintTable(tr)
     if (tr.Hit) then
-        local pos = tr.HitPos + Vector(0, 0, 220)
+        local pos = tr.HitPos + tr.HitNormal * 500 + Vector(0, 0, 100)
         local ang = ply:EyeAngles()
         ang.p = 0
         ang.y = ang.y + 180
@@ -134,7 +133,18 @@ function ENT:SpawnFunction(ply, tr, className)
 
         return ent
     else
+        local pos = ply:EyePos() + ply:EyeAngles():Forward() * 1500
+        local ang = ply:EyeAngles()
+        ang.p = 0
+        ang.y = ang.y + 180
 
+        local ent = ents.Create(className)
+        ent:SetPos(pos)
+        ent:SetAngles(ang)
+        ent:Spawn()
+        ent:Activate()
+
+        return ent
     end
 end
 
