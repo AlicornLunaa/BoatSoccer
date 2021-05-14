@@ -5,7 +5,7 @@ local function DrawCentered(roundness, x, y, w, h, c)
     draw.RoundedBox(roundness, x - w / 2, y - h / 2, w, h, c)
 end
 
-local function DrawScoreboard(pos, ang, scale, players, score0, score1)
+local function DrawScoreboard(pos, ang, scale, players, score0, score1, matchTime, ot)
     cam.Start3D2D(pos, ang, scale)
         -- Title
         draw.RoundedBox(1, -100, -80, 200, 15, boat_soccer_config.neutral)
@@ -28,6 +28,11 @@ local function DrawScoreboard(pos, ang, scale, players, score0, score1)
                 line1 = line1 + 12
             end
         end
+
+        -- Match timer
+        draw.DrawText(tostring(score0), "bs_font_hud_text", -55, 19, boat_soccer_config.text, TEXT_ALIGN_CENTER)
+        draw.DrawText(tostring(score1), "bs_font_hud_text", 55, 19, boat_soccer_config.text, TEXT_ALIGN_CENTER)
+        draw.DrawText(string.format("%d:%02d", matchTime / 60, matchTime % 60), "bs_font_hud_text", 0, 19, boat_soccer_config.text, TEXT_ALIGN_CENTER)
     cam.End3D2D()
 end
 
@@ -113,7 +118,7 @@ function ENT:Draw()
         end
 
         if (!boat_soccer_client.joined) then
-            DrawScoreboard(pos, ang, 0.5, boat_soccer_client.controllers[self:EntIndex()].players, self:GetNWInt("score0", 0))
+            DrawScoreboard(pos, ang, 0.5, boat_soccer_client.controllers[self:EntIndex()].players, self:GetNWInt("score0", 0), self:GetNWInt("score1", 0), matchTime, self:GetNWBool("overtime", false))
         else
             -- Check if the game started to start a countdown
             if ((boat_soccer_client.controllers[self:EntIndex()].gameStarted != self.lastGameStarted and self.lastGameStarted == false) or
