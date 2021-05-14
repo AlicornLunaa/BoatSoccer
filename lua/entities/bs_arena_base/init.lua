@@ -118,6 +118,26 @@ function ENT:Use( activator, caller )
     end
 end
 
+function ENT:SpawnFunction(ply, tr, className)
+    PrintTable(tr)
+    if (tr.Hit) then
+        local pos = tr.HitPos + Vector(0, 0, 220)
+        local ang = ply:EyeAngles()
+        ang.p = 0
+        ang.y = ang.y + 180
+
+        local ent = ents.Create(className)
+        ent:SetPos(pos)
+        ent:SetAngles(ang)
+        ent:Spawn()
+        ent:Activate()
+
+        return ent
+    else
+
+    end
+end
+
 function ENT:Think()
     -- Keep goals in position
     if (self.goal0 and self.goal0:IsValid()) then
