@@ -30,8 +30,13 @@ function ENT:Think()
         local thisPos = (thisFrame.pos * interpolation)
         local thisAng = (thisFrame.ang * interpolation)
 
-        self:SetPos(thisPos + self.prevPos)
-        self:SetAngles(thisAng + self.prevRot)
+        if (self.parent == self) then
+            self:SetPos(thisPos + self.prevPos)
+            self:SetAngles(thisAng + self.prevRot)
+        else
+            self:SetPos(self.parent:LocalToWorld(thisPos + self.prevPos))
+            self:SetAngles(self.parent:LocalToWorldAngles(thisAng + self.prevRot))
+        end
 
         -- Reset time
         if (self.deltaTime >= thisFrame.time) then
