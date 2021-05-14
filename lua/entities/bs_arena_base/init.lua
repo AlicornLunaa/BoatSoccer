@@ -3,9 +3,9 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 include("boat_soccer/sh_init.lua")
 
-local function SpawnGoal(pos, ang)
+local function SpawnGoal(mdl, pos, ang)
     local e = ents.Create("prop_physics")
-    e:SetModel("models/boat_soccer/goal.mdl")
+    e:SetModel(mdl)
     e:SetPos(pos)
     e:SetAngles(ang)
     e:Spawn()
@@ -60,14 +60,16 @@ local function IsInGame(ply)
     return false
 end
 
-function ENT:Initialize()
-    self:SetModel("models/boat_soccer/arena0.mdl")
+function ENT:ArenaInit(mdl, goalMdl)
+    -- Initialize an arena
+    self:SetModel(mdl)
     self:PhysicsInit(SOLID_VPHYSICS)
     self:SetMoveType(MOVETYPE_VPHYSICS)
     self:SetSolid(SOLID_VPHYSICS)
     self:SetUseType(SIMPLE_USE)
 
     -- Initialize members
+    self.goalMdl = goalMdl
     self.goal0 = nil
     self.goal1 = nil
     self.bs_ball = nil
@@ -99,6 +101,11 @@ function ENT:Initialize()
         phys:SetMass(1000)
         phys:Wake()
     end
+end
+
+function ENT:Initialize()
+    -- Default
+    self:ArenaInit("models/boat_soccer/arena0.mdl", "models/boat_soccer/goal0.mdl")
 end
 
 function ENT:GetSettings()
@@ -166,8 +173,8 @@ end
 function ENT:StartGame()
     -- Spawn ball
     boat_soccer.controllers[self:EntIndex()].gameStarted = true
-    self.goal0 = SpawnGoal(self:GetPos(), self:LocalToWorldAngles(Angle(0, 180, 0)))
-    self.goal1 = SpawnGoal(self:GetPos(), self:LocalToWorldAngles(Angle(0, 0, 0)))
+    self.goal0 = SpawnGoal(self.goalMdl, self:GetPos(), self:LocalToWorldAngles(Angle(0, 180, 0)))
+    self.goal1 = SpawnGoal(self.goalMdl, self:GetPos(), self:LocalToWorldAngles(Angle(0, 0, 0)))
     self.bs_ball = SpawnBall(self:LocalToWorld(Vector(0, 0, 80)))
 
     constraint.NoCollide(self, self.goal0, 0, 0)
