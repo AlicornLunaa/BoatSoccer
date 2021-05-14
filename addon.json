@@ -1,0 +1,11 @@
+{
+	"title"		:	"Boat Soccer",
+	"type"		:	"entity",
+	"tags"		:	[ "fun", "water" ],
+	"ignore"	:
+	[
+		"*.md",
+		".gitignore",
+		"*.code-workspace"
+	]
+}
