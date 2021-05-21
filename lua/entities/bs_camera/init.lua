@@ -20,6 +20,11 @@ function ENT:Initialize()
 end
 
 function ENT:Think()
+    if (!self.parent:IsValid()) then
+        self:Remove()
+        return
+    end
+
     if (self.running) then
         self.deltaTime = self.deltaTime + FrameTime()
 

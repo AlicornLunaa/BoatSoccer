@@ -69,9 +69,11 @@ function boat_soccer_client.OpenMenu(id, matchAdmin)
         if (boat_soccer_client.joined) then
             boat_soccer_client.Leave(id)
             joinLeaveButton:SetText("Join game")
+            boat_soccer_client.team = false
         else
             boat_soccer_client.Join(id, selectedModel)
             joinLeaveButton:SetText("Leave game")
+            boat_soccer_client.team = false
         end
     end
 
@@ -81,6 +83,7 @@ function boat_soccer_client.OpenMenu(id, matchAdmin)
     switchTeamButton:SetText("Switch team")
     switchTeamButton.DoClick = function()
         boat_soccer_client.SwitchTeam(id)
+        boat_soccer_client.team = !boat_soccer_client.team
     end
 
     local startGameButton = vgui.Create("DButton", frame)

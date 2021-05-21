@@ -3,6 +3,7 @@ boat_soccer_client = boat_soccer_client or {}
 boat_soccer_client.controllers = {}
 boat_soccer_client.balls = {}
 boat_soccer_client.joined = false
+boat_soccer_client.team = false -- False red, true blue
 
 include("cl_network.lua")
 include("cl_menu.lua")
@@ -126,6 +127,10 @@ function boat_soccer_client.Join(id, boatSelection)
         net.WriteInt(id, 32)
         net.WriteInt(boatSelection, 8)
     net.SendToServer()
+
+    if (boat_soccer_client.team) then
+        boat_soccer_client.SwitchTeam(id)
+    end
 end
 
 function boat_soccer_client.Leave(id)

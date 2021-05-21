@@ -73,7 +73,7 @@ hook.Add("PhysgunPickup", "boat_soccer:allowpickup", function(ply, ent)
     if (!GetConVar("bs_pickup_disabled"):GetBool()) then return true end
 
     -- Disable pickup for started arenas
-    if (ent.ClassName == "bs_arena") then
+    if (ent.Base == "bs_arena_base") then
         return !boat_soccer.IsStarted(ent:EntIndex())
     elseif (ent.ClassName == "bs_ball") then
         return false
