@@ -118,14 +118,6 @@ function ENT:Think()
                 phys:ApplyForceCenter(forward * -self.speed * self.multiplier)
             end
 
-            if (self.driver:KeyDown(IN_MOVELEFT)) then
-                phys:ApplyForceCenter(right * -self.speed / self.multiplier)
-            end
-
-            if (self.driver:KeyDown(IN_MOVERIGHT)) then
-                phys:ApplyForceCenter(right * self.speed / self.multiplier)
-            end
-
             if (self.driver:KeyDown(IN_SPEED) and self:GetNWFloat("boost", 0) > 0) then
                 -- Boost
                 self.multiplier = self.boostMultiply
