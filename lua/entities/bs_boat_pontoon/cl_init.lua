@@ -1,6 +1,5 @@
--- Clientside boat initialization
 include("shared.lua")
 
-function ENT:Draw()
-    self:DrawModel()
+function ENT:SetValues()
+    self.height = Vector(0, 3.75, 7)
 end

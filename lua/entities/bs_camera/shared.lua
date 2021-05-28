@@ -1,4 +1,4 @@
-ENT.Type = "anim"
+ENT.Type = "point"
 ENT.Base = "base_gmodentity"
 
 ENT.PrintName = "Boat Soccer Camera"

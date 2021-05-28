@@ -113,7 +113,7 @@ function boat_soccer_client.GetTeamCount(team, id)
 end
 
 function boat_soccer_client.IsMatchAdmin(id)
-    if (boat_soccer_client.controllers[id].players[LocalPlayer():SteamID64()] == nil) then
+    if (boat_soccer_client.controllers and boat_soccer_client.controllers[id].players and boat_soccer_client.controllers[id].players[LocalPlayer():SteamID64()] == nil) then
         return false
     else
         return boat_soccer_client.controllers[id].players[LocalPlayer():SteamID64()].matchAdmin

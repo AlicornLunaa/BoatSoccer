@@ -6,7 +6,7 @@ include("sv_network.lua")
 include("sh_init.lua")
 
 -- Convars
-CreateConVar("bs_pickup_disabled", 0, FCVAR_NONE, "Whether or not you can pickup entities in a game", 0, 1)
+CreateConVar("bs_pickup_disabled", 1, FCVAR_NONE, "Whether or not you can pickup entities in a game", 0, 1)
 
 -- Functions
 function boat_soccer.GetTeamCount(team, id)
@@ -70,6 +70,21 @@ end
 
 -- Hooks
 hook.Add("PhysgunPickup", "boat_soccer:allowpickup", function(ply, ent)
+    if (!GetConVar("bs_pickup_disabled"):GetBool()) then return true end
+
+    -- Disable pickup for started arenas
+    if (ent.Base == "bs_arena_base") then
+        return !boat_soccer.IsStarted(ent:EntIndex())
+    elseif (ent.ClassName == "bs_ball") then
+        return false
+    elseif (ent.Base == "bs_boat_base") then
+        return ent.team == -1
+    end
+
+    return true
+end )
+
+hook.Add("CanPlayerUnfreeze", "boat_soccer:allowfreeze", function(ply, ent)
     if (!GetConVar("bs_pickup_disabled"):GetBool()) then return true end
 
     -- Disable pickup for started arenas
