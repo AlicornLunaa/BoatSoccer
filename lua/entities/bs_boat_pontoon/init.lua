@@ -14,5 +14,6 @@ function ENT:Initialize()
     self.offset = Angle(0, 0, 0)
     self.bs_buoyancy = 5
     self.speed = 550
+    self.anchorage = 1
     self:InitPhys()
 end

@@ -17,24 +17,6 @@ local function coefficient(number)
     end
 end
 
-local function applyTorque(ent, force)
-    local phys = ent:GetPhysicsObject()
-    local direction = phys:LocalToWorld(force) - ent:GetPos()
-    local power = force:Length()
-
-    local offset
-    if (math.abs(direction.x) > power * 0.1 or math.abs(direction.z) > power * 0.1) then
-        offset = Vector(-direction.z, 0, direction.x)
-    else
-        offset = Vector(-direction.y, direction.x, 0)
-    end
-    offset = offset:GetNormal() * power * 0.5
-    direction = direction:Cross(offset):GetNormal()
-
-    phys:ApplyForceOffset(direction, offset)
-    phys:ApplyForceOffset(-direction, -offset)
-end
-
 function ENT:ExitBoat(activator)
     -- Runs exit sequence
     self.driver:UnSpectate()
@@ -67,6 +49,7 @@ function ENT:InitializeData()
     self.boostDrain = 1
     self.boostRegen = 1
     self.bs_buoyancy = 1
+    self.anchorage = 0.5
     self.offset = Angle(0, 0, 0)
     self.team = -1
     self.camera = nil
@@ -135,13 +118,13 @@ function ENT:Think()
                 phys:ApplyForceCenter(forward * -self.speed * self.multiplier)
             end
 
-            --[[if (self.driver:KeyDown(IN_MOVELEFT)) then
+            if (self.driver:KeyDown(IN_MOVELEFT)) then
                 phys:ApplyForceCenter(right * -self.speed / self.multiplier)
             end
 
             if (self.driver:KeyDown(IN_MOVERIGHT)) then
                 phys:ApplyForceCenter(right * self.speed / self.multiplier)
-            end]]
+            end
 
             if (self.driver:KeyDown(IN_SPEED) and self:GetNWFloat("boost", 0) > 0) then
                 -- Boost
@@ -176,11 +159,13 @@ function ENT:Think()
         local forwardVel = (self:GetVelocity() * forward):Length() / 8 * movementDirection
         local rotationScale = self:GetVelocity():Length() / 500
         local _, localAng = WorldToLocal(self:GetPos(), self:GetAngles(), self.driver:GetPos(), self.driver:EyeAngles() + self.offset)
+        localAng.x = math.Clamp(self:GetAngles().x + (self:GetPhysicsObject():GetAngleVelocity() * 0.1).y, -45, 45) * -0.5
         localAng.y = math.Clamp(localAng.y + (self:GetPhysicsObject():GetAngleVelocity() * 0.1).z, -45, 45) / self.multiplier
         localAng.z = math.Clamp(self:GetAngles().z + (self:GetPhysicsObject():GetAngleVelocity() * 0.1).x, -45, 45) * 5
+        print(localAng)
 
         if (self:LocalToWorldAngles(self.offset).p <= 45 and self:LocalToWorldAngles(self.offset).p >= -45) then
-            applyTorque(self, Vector(-localAng.z * 0.5, -forwardVel, localAng.y * -10 * rotationScale) * phys:GetMass())
+            phys:AddAngleVelocity(Vector(-localAng.z * self.anchorage, localAng.x * 0.5, localAng.y * -10 * rotationScale))
         end
 
         -- Vehicle exit
