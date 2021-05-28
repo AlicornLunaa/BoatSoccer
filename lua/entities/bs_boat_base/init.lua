@@ -183,7 +183,10 @@ function ENT:Think()
         local _, localAng = WorldToLocal(self:GetPos(), self:GetAngles(), self.driver:GetPos(), self.driver:EyeAngles() + self.offset)
         localAng.y = math.Clamp(localAng.y + (self:GetPhysicsObject():GetAngleVelocity() * 0.1).z, -45, 45) / self.multiplier
         localAng.z = math.Clamp(self:GetAngles().z + (self:GetPhysicsObject():GetAngleVelocity() * 0.1).x, -45, 45) * 5
-        applyTorque(self, Vector(-localAng.z * 0.5, -forwardVel, localAng.y * -10 * rotationScale) * phys:GetMass())
+
+        if (self:LocalToWorldAngles(self.offset).p <= 45 and self:LocalToWorldAngles(self.offset).p >= -45) then
+            applyTorque(self, Vector(-localAng.z * 0.5, -forwardVel, localAng.y * -10 * rotationScale) * phys:GetMass())
+        end
 
         -- Vehicle exit
         if (self.driver:KeyPressed(IN_USE)) then
