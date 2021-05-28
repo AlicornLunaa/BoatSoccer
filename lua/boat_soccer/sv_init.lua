@@ -34,13 +34,20 @@ function boat_soccer.AddPlayer(ply, id, boatSelection)
         t = 1
     end
 
+    if (boat_soccer.controllers[id].players[ply:SteamID64()] == nil) then
+        -- Only increment playerCount if the player is joining for the first time
+        boat_soccer.controllers[id].playerCount = boat_soccer.controllers[id].playerCount + 1
+    else
+        -- If the player isn't joining for the first time, matchAdmin flag should be the same
+        ma = boat_soccer.controllers[id].players[ply:SteamID64()].matchAdmin
+    end
+
     boat_soccer.controllers[id].players[ply:SteamID64()] = {
         name = ply:Nick(),
         team = t,
         boatType = boatSelection,
         matchAdmin = ma
     }
-    boat_soccer.controllers[id].playerCount = boat_soccer.controllers[id].playerCount + 1
 end
 
 function boat_soccer.DelPlayer(ply, id)
