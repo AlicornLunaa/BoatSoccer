@@ -12,6 +12,7 @@ function ENT:Initialize()
     self:SetModel("models/boat_soccer/fishermanboat.mdl")
     self:InitializeData()
     self.offset = Angle(0, 0, 0)
-    self.bs_buoyancy = 3
+    self.bs_buoyancy = 5
+    self.speed = 350
     self:InitPhys()
 end

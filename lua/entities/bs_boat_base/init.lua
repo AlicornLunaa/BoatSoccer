@@ -135,13 +135,13 @@ function ENT:Think()
                 phys:ApplyForceCenter(forward * -self.speed * self.multiplier)
             end
 
-            if (self.driver:KeyDown(IN_MOVELEFT)) then
+            --[[if (self.driver:KeyDown(IN_MOVELEFT)) then
                 phys:ApplyForceCenter(right * -self.speed / self.multiplier)
             end
 
             if (self.driver:KeyDown(IN_MOVERIGHT)) then
                 phys:ApplyForceCenter(right * self.speed / self.multiplier)
-            end
+            end]]
 
             if (self.driver:KeyDown(IN_SPEED) and self:GetNWFloat("boost", 0) > 0) then
                 -- Boost
@@ -166,11 +166,6 @@ function ENT:Think()
 
                 self:SetNWFloat("boost", math.min(self:GetNWFloat("boost", 0) + self.boostRegen, 100))
                 self.boosting = false
-            end
-
-            if (self.driver:KeyDown(IN_JUMP)) then
-                -- Jump out of water
-                phys:ApplyForceCenter(self:GetUp() * self.jumpForce * self.multiplier)
             end
         end
 

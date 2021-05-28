@@ -14,5 +14,6 @@ function ENT:Initialize()
     self:InitializeData()
     self.offset = Angle(0, 0, 0)
     self.bs_buoyancy = 7
+    self.speed = 1000
     self:InitPhys()
 end
