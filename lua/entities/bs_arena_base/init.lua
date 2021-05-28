@@ -536,5 +536,6 @@ function ENT:EndGame()
 
         -- Reset game
         self:Initialize()
+        self:GetPhysicsObject():EnableMotion(false)
     end )
 end
