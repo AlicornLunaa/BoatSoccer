@@ -97,8 +97,6 @@ end
 
 function ENT:Draw()
     self:DrawModel()
-    PrintTable(boat_soccer_client)
-    print("====================================================================================================================================")
 
     local _, maxs = self:GetModelBounds()
     local pos = self:LocalToWorld(Vector(0, 0, maxs.z + 48))
