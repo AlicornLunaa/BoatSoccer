@@ -27,7 +27,7 @@ end
 
 function boat_soccer.AddPlayer(ply, id, boatSelection)
     -- Adds player to the controller with that id
-    local ma = (#boat_soccer.controllers[id].players == 0)
+    local ma = (boat_soccer.controllers[id].playerCount == 0)
     local t = 0
 
     if (boat_soccer.GetTeamCount(0, id) >= boat_soccer_config.maxTeamSize) then
@@ -40,11 +40,13 @@ function boat_soccer.AddPlayer(ply, id, boatSelection)
         boatType = boatSelection,
         matchAdmin = ma
     }
+    boat_soccer.controllers[id].playerCount = boat_soccer.controllers[id].playerCount + 1
 end
 
 function boat_soccer.DelPlayer(ply, id)
     -- Removes player from the controller with that id
     boat_soccer.controllers[id].players[ply:SteamID64()] = nil
+    boat_soccer.controllers[id].playerCount = boat_soccer.controllers[id].playerCount - 1
     boat_soccer.UpdateControllerClient(ply)
 end
 

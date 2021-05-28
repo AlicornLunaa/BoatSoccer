@@ -77,6 +77,7 @@ function ENT:ArenaInit(mdl, goalMdl)
     self.resetting = false
     boat_soccer.controllers[self:EntIndex()] = {}
     boat_soccer.controllers[self:EntIndex()].entity = self
+    boat_soccer.controllers[self:EntIndex()].playerCount = 0
     boat_soccer.controllers[self:EntIndex()].players = {}
     boat_soccer.controllers[self:EntIndex()].gameStarted = false
     boat_soccer.controllers[self:EntIndex()].counting = false
