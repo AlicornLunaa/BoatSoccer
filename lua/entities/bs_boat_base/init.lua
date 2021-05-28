@@ -154,7 +154,6 @@ function ENT:Think()
         localAng.x = math.Clamp(self:GetAngles().x + (self:GetPhysicsObject():GetAngleVelocity() * 0.1).y, -45, 45) * -0.5
         localAng.y = math.Clamp(localAng.y + (self:GetPhysicsObject():GetAngleVelocity() * 0.1).z, -45, 45) / self.multiplier
         localAng.z = math.Clamp(self:GetAngles().z + (self:GetPhysicsObject():GetAngleVelocity() * 0.1).x, -45, 45) * 5
-        print(localAng)
 
         if (self:LocalToWorldAngles(self.offset).p <= 45 and self:LocalToWorldAngles(self.offset).p >= -45) then
             phys:AddAngleVelocity(Vector(-localAng.z * self.anchorage, localAng.x * 0.5, localAng.y * -10 * rotationScale))

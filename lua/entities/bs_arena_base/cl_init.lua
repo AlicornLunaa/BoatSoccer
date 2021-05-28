@@ -97,6 +97,8 @@ end
 
 function ENT:Draw()
     self:DrawModel()
+    PrintTable(boat_soccer_client)
+    print("====================================================================================================================================")
 
     local _, maxs = self:GetModelBounds()
     local pos = self:LocalToWorld(Vector(0, 0, maxs.z + 48))
@@ -113,13 +115,14 @@ function ENT:Draw()
     end
 
     if (boat_soccer_client.controllers[self:EntIndex()] != nil and boat_soccer_client.controllers[self:EntIndex()] != false) then
-        if (boat_soccer_client.controllers[self:EntIndex()].counting) then
-            self.currentTime = SysTime()
-        end
-
-        if (!boat_soccer_client.joined) then
+        if (boat_soccer_client.joined != self:EntIndex()) then
             DrawScoreboard(pos, ang, 0.5, boat_soccer_client.controllers[self:EntIndex()].players, self:GetNWInt("score0", 0), self:GetNWInt("score1", 0), matchTime, self:GetNWBool("overtime", false))
         else
+            -- Counting
+            if (boat_soccer_client.controllers[self:EntIndex()].counting) then
+                self.currentTime = SysTime()
+            end
+
             -- Check if the game started to start a countdown
             if ((boat_soccer_client.controllers[self:EntIndex()].gameStarted != self.lastGameStarted and self.lastGameStarted == false) or
                     (self:GetNWInt("round", 1) != self.lastRound and boat_soccer_client.controllers[self:EntIndex()].gameStarted == true)) then
