@@ -167,6 +167,35 @@ function ENT:Think()
         self.goal1:GetPhysicsObject():EnableMotion(false)
     end
 
+    -- Check ball position
+    if (self.bs_ball and self.bs_ball:IsValid() and !timer.Exists("ballCheck")) then
+        -- Casting a ray to the center of the arena that only collides with the arena will give a rough answer
+        -- if the ball is inside the arena or out.
+        local function isHittingArena()
+            local res = util.TraceLine({
+                start = self.bs_ball:GetPos(),
+                endpos = self:GetPos(),
+                filter = function(e)
+                    if e == self then return true end
+                    return false
+                end,
+                ignoreworld = true
+            })
+            return res.Hit
+        end
+
+        print(isHittingArena())
+        if isHittingArena() then
+            timer.Create("ballCheck", 6, 1, function()
+                -- Check if the ball is still out of bounds after 6 seconds
+                if self.bs_ball and self.bs_ball:IsValid() and isHittingArena() then
+                    -- Reset the ball
+                    self.bs_ball:SetPos(self:GetPos())
+                end
+            end )
+        end
+    end
+
     -- Update entity client
     boat_soccer.UpdateControllerClient()
 
@@ -511,6 +540,7 @@ function ENT:EndGame()
     self:SetNWBool("overtime", false)
     self.resetting = false
     timer.Remove("roundTime")
+    timer.Remove("ballCheck")
 
     self:SetNWInt("score0", 0)
     self:SetNWInt("score1", 0)
