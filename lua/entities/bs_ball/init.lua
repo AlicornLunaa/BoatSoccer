@@ -27,7 +27,7 @@ function ENT:PhysicsCollide(data, obj)
     if (data.HitEntity.Base == "bs_boat_base") then
         local phys = self:GetPhysicsObject()
         if (phys:IsValid()) then
-            phys:AddVelocity(data.OurNewVelocity * 1.25)
+            phys:AddVelocity(data.OurNewVelocity * 1.25 + data.HitEntity:GetForward() * 5)
         end
 
         local team = data.HitEntity.team
