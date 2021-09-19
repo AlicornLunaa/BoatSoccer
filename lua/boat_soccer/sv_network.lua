@@ -43,7 +43,7 @@ end
 -- Receives
 net.Receive("boat_soccer:join", function(len, ply)
     local id = net.ReadInt(32)
-    local boatSelection = net.ReadInt(32)
+    local boatSelection = net.ReadInt(8)
     boat_soccer.AddPlayer(ply, id, boatSelection)
 end )
 
