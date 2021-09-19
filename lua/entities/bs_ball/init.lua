@@ -61,5 +61,7 @@ function ENT:ScoreAnim()
     explosion:SetKeyValue("iMagnitude", "0")
     explosion:Fire("Explode", 0, 0)
 
-    self:SetPos(Vector(0, 0, 0))
+    timer.Simple(0.1, function()
+        self:SetPos(Vector(0, 0, 0))
+    end )
 end

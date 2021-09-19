@@ -253,7 +253,6 @@ function ENT:StartGame()
             self:SetNWInt("score0", self:GetNWInt("score0", 0) + 1)
 
             ThrowBoats(self.spawnedBoats, self.bs_ball:GetPos(), boat_soccer_config.throwForce)
-            self.bs_ball:GetPhysicsObject():EnableMotion(false)
             self.bs_ball:ScoreAnim()
 
             timer.Simple(2, function()
@@ -272,7 +271,6 @@ function ENT:StartGame()
             self:SetNWInt("score1", self:GetNWInt("score1", 0) + 1)
 
             ThrowBoats(self.spawnedBoats, self.bs_ball:GetPos(), boat_soccer_config.throwForce)
-            self.bs_ball:GetPhysicsObject():EnableMotion(false)
             self.bs_ball:ScoreAnim()
 
             timer.Simple(2, function()
