@@ -6,7 +6,7 @@ include("sv_network.lua")
 include("sh_init.lua")
 
 -- Convars
-CreateConVar("bs_pickup_disabled", 1, FCVAR_NONE, "Whether or not you can pickup entities in a game", 0, 1)
+CreateConVar("bs_pickup_disabled", 1, FCVAR_NONE, "Whether or not you can pickup entities in a game of boat soccer", 0, 1)
 
 -- Functions
 function boat_soccer.GetTeamCount(team, id)

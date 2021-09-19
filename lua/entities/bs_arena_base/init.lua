@@ -535,14 +535,10 @@ function ENT:EndGame()
     -- Ends the game without actually removing the entity
     boat_soccer.controllers[self:EntIndex()].counting = false
     boat_soccer.controllers[self:EntIndex()].gameStarted = false
-    self:SetNWInt("round", 1)
     self:SetNWBool("overtime", false)
     self.resetting = false
     timer.Remove("roundTime")
     timer.Remove("ballCheck")
-
-    self:SetNWInt("score0", 0)
-    self:SetNWInt("score1", 0)
 
     -- Delete every boat
     for k, v in pairs(self.spawnedBoats) do
@@ -558,7 +554,7 @@ function ENT:EndGame()
 
     -- Reset winner
     timer.Simple(5, function()
-        if boat_soccer.controllers[self:EntIndex()] == nil then
+        if boat_soccer.controllers[self:EntIndex()] != nil then
             self:SetNWInt("winner", -1)
 
             -- Force every player to leave
