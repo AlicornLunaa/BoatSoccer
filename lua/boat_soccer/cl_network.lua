@@ -6,7 +6,7 @@ net.Receive("boat_soccer:update_controllers", function()
 end )
 
 net.Receive("boat_soccer:open_menu", function()
-    local id = net.ReadInt(8)
+    local id = net.ReadInt(32)
     boat_soccer_client.OpenMenu(id, boat_soccer_client.IsMatchAdmin(id))
 end )
 

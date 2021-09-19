@@ -102,6 +102,9 @@ function ENT:ArenaInit(mdl, goalMdl)
         phys:SetMass(1000)
         phys:Wake()
     end
+
+    -- Update values
+    boat_soccer.UpdateControllerClient()
 end
 
 function ENT:Initialize()
@@ -115,6 +118,7 @@ end
 
 function ENT:Use( activator, caller )
     if (activator:IsValid() and activator:IsPlayer() and !boat_soccer.controllers[self:EntIndex()].gameStarted and (IsInGame(activator) == false or IsInGame(activator) == self:EntIndex())) then
+        -- Send the information to the clients
         boat_soccer.OpenMenu(activator, self:EntIndex())
     end
 end

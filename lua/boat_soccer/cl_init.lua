@@ -115,9 +115,9 @@ end
 function boat_soccer_client.IsMatchAdmin(id)
     if (boat_soccer_client.controllers and boat_soccer_client.controllers[id] and boat_soccer_client.controllers[id].players and boat_soccer_client.controllers[id].players[LocalPlayer():SteamID64()] == nil) then
         return false
-    else
-        return boat_soccer_client.controllers[id].players[LocalPlayer():SteamID64()].matchAdmin
     end
+
+    return boat_soccer_client.controllers[id].players[LocalPlayer():SteamID64()].matchAdmin
 end
 
 function boat_soccer_client.Join(id, boatSelection)
