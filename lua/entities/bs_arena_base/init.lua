@@ -184,7 +184,6 @@ function ENT:Think()
             return res.Hit
         end
 
-        print(isHittingArena())
         if isHittingArena() then
             timer.Create("ballCheck", 6, 1, function()
                 -- Check if the ball is still out of bounds after 6 seconds
