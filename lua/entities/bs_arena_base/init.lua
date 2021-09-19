@@ -529,18 +529,20 @@ function ENT:EndGame()
 
     -- Reset winner
     timer.Simple(5, function()
-        self:SetNWInt("winner", -1)
+        if boat_soccer.controllers[self:EntIndex()] == nil then
+            self:SetNWInt("winner", -1)
 
-        -- Force every player to leave
-        for k, v in pairs(boat_soccer.controllers[self:EntIndex()].players) do
-            if (!player.GetBySteamID64(k)) then continue end
+            -- Force every player to leave
+            for k, v in pairs(boat_soccer.controllers[self:EntIndex()].players) do
+                if (!player.GetBySteamID64(k)) then continue end
 
-            boat_soccer.ForceLeave(player.GetBySteamID64(k))
-            boat_soccer.CloseDerma(player.GetBySteamID64(k))
+                boat_soccer.ForceLeave(player.GetBySteamID64(k))
+                boat_soccer.CloseDerma(player.GetBySteamID64(k))
+            end
+
+            -- Reset game
+            self:Initialize()
+            self:GetPhysicsObject():EnableMotion(false)
         end
-
-        -- Reset game
-        self:Initialize()
-        self:GetPhysicsObject():EnableMotion(false)
     end )
 end
