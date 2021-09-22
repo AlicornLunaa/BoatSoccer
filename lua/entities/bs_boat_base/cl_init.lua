@@ -5,6 +5,7 @@ include("boat_soccer/cl_boat_hud.lua")
 -- Create entity methods
 function ENT:Initialize()
     self:SetValues()
+    self.lastBoost = false
     boat_hud_spawned[self] = true
 end
 
@@ -22,4 +23,13 @@ function ENT:Draw()
             draw.DrawText(self:GetNWEntity("driver"):Nick(), "bs_font_hud_name", 0, 0, self:GetColor(), TEXT_ALIGN_CENTER)
         end
     cam.End3D2D()
+
+    if self:GetNWBool("boosting", false) == true and self.lastBoost == false then
+        self:EmitSound("boost")
+        self.lastBoost = true
+    elseif self:GetNWBool("boosting", false) == false and self.lastBoost == true then
+        self:EmitSound("boost_end")
+        self:StopSound("boost")
+        self.lastBoost = false
+    end
 end

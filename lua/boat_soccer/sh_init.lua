@@ -93,3 +93,21 @@ sound.Add({
     pitch = 100,
     sound = "ambient/music/country_rock_am_radio_loop.wav"
 })
+
+sound.Add({
+    name = "boost",
+    channel = CHAN_STATIC,
+    volume = 0.8,
+    level = 60,
+    pitch = 100,
+    sound = "items/suitcharge1.wav"
+})
+
+sound.Add({
+    name = "boost_end",
+    channel = CHAN_STATIC,
+    volume = 0.8,
+    level = 60,
+    pitch = 100,
+    sound = "items/suitchargeok1.wav"
+})

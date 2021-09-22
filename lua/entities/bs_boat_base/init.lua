@@ -56,9 +56,11 @@ function ENT:InitializeData()
     self.boosting = false
     self.trail = nil
     self.lastPosition = self:GetPos()
+    self.depleted = false -- If the boost key wasnt released
 
     -- Networked variables
     self:SetNWBool("driving", false)
+    self:SetNWBool("boosting", false)
     self:SetNWFloat("boost", 33)
 end
 
@@ -118,7 +120,7 @@ function ENT:Think()
                 phys:ApplyForceCenter(forward * -self.speed * self.multiplier)
             end
 
-            if (self.driver:KeyDown(IN_SPEED) and self:GetNWFloat("boost", 0) > 0) then
+            if (self.driver:KeyDown(IN_SPEED) and self:GetNWFloat("boost", 0) > 0 and not self.depleted) then
                 -- Boost
                 self.multiplier = self.boostMultiply
 
@@ -130,16 +132,24 @@ function ENT:Think()
                     self.trail:SetKeyValue("Lifetime", tostring(self:GetVelocity():Length() / 300))
                 end
 
+                self:SetNWBool("boosting", true)
                 self:SetNWFloat("boost", math.max(self:GetNWFloat("boost", 0) - self.boostDrain, 0))
                 self.boosting = true
             else
+                if self.driver:KeyDown(IN_SPEED) and self:GetNWFloat("boost", 0) <= 0 then
+                    self.depleted = true
+                else
+                    self.depleted = false
+                    self:SetNWFloat("boost", math.min(self:GetNWFloat("boost", 0) + self.boostRegen, 100))
+                end
+
                 self.multiplier = 1
 
                 if (self.boosting == true and self.trail and self.trail:IsValid()) then
                     self.trail:Remove()
                 end
 
-                self:SetNWFloat("boost", math.min(self:GetNWFloat("boost", 0) + self.boostRegen, 100))
+                self:SetNWBool("boosting", false)
                 self.boosting = false
             end
         end
