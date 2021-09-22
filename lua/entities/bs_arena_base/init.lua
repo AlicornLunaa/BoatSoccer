@@ -206,6 +206,7 @@ end
 function ENT:OnRemove()
     -- Cleanup
     timer.Stop("roundTime")
+    self:StopSound("music_loop")
 
     -- Force every player to leave
     for k, v in pairs(boat_soccer.controllers[self:EntIndex()].players) do
@@ -243,6 +244,8 @@ function ENT:StartGame()
     constraint.NoCollide(self, self.goal0, 0, 0)
     constraint.NoCollide(self, self.goal1, 0, 0)
 
+    self:EmitSound("music_loop")
+
     -- Callbacks for goals
     self.goal0:AddCallback("PhysicsCollide", function(e, data)
         if (data.HitEntity == self.bs_ball and !self.resetting) then
@@ -252,6 +255,7 @@ function ENT:StartGame()
             self.resetting = true
             self:SetNWInt("score0", self:GetNWInt("score0", 0) + 1)
 
+            self:EmitSound("goal_scored")
             ThrowBoats(self.spawnedBoats, self.bs_ball:GetPos(), boat_soccer_config.throwForce)
             self.bs_ball:ScoreAnim()
 
@@ -270,6 +274,7 @@ function ENT:StartGame()
             self.resetting = true
             self:SetNWInt("score1", self:GetNWInt("score1", 0) + 1)
 
+            self:EmitSound("goal_scored")
             ThrowBoats(self.spawnedBoats, self.bs_ball:GetPos(), boat_soccer_config.throwForce)
             self.bs_ball:ScoreAnim()
 
@@ -550,6 +555,12 @@ function ENT:EndGame()
     if (self.goal1 and self.goal1:IsValid()) then self.goal1:Remove() end
     if (self.bs_ball and self.bs_ball:IsValid()) then self.bs_ball:Remove() end
 
+    -- Play sounds if they won or lost
+    for k, v in pairs(boat_soccer.controllers[self:EntIndex()].players) do
+        if (!player.GetBySteamID64(k)) then continue end
+        boat_soccer.PlayWinSound(player.GetBySteamID64(k), self:EntIndex(), boat_soccer.controllers[self:EntIndex()].players[k].team == self:GetNWInt("winner", -1))
+    end
+
     -- Reset winner
     timer.Simple(5, function()
         if boat_soccer.controllers[self:EntIndex()] != nil then
@@ -564,6 +575,7 @@ function ENT:EndGame()
             end
 
             -- Reset game
+            self:StopSound("music_loop")
             self:Initialize()
             self:GetPhysicsObject():EnableMotion(false)
         end

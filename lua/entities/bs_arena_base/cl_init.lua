@@ -36,7 +36,7 @@ local function DrawScoreboard(pos, ang, scale, players, score0, score1, matchTim
     cam.End3D2D()
 end
 
-local function DrawHUD(time, winner, score0, score1, matchTime, ot)
+local function DrawHUD(time, winner, score0, score1, matchTime, ot, arena)
     local out = false
     local oldW, oldH = ScrW(), ScrH()
     render.SetViewPort(oldW / 2 - 250, 0, 500, 500)
@@ -61,7 +61,6 @@ local function DrawHUD(time, winner, score0, score1, matchTime, ot)
                 -- Blue wins
                 DrawCentered(20, 250, 125, 342, 75, boat_soccer_config.neutral)
                 draw.DrawText("Blue team wins!", "bs_font_hud_small", 250, 105, boat_soccer_config.team1, TEXT_ALIGN_CENTER)
-
                 out = true
             end
         end
@@ -147,7 +146,7 @@ function ENT:Draw()
                 end
             end
 
-            if (DrawHUD(self.time, self:GetNWInt("winner", -1), self:GetNWInt("score0", 0), self:GetNWInt("score1", 0), matchTime, self:GetNWBool("overtime", false))) then
+            if (DrawHUD(self.time, self:GetNWInt("winner", -1), self:GetNWInt("score0", 0), self:GetNWInt("score1", 0), matchTime, self:GetNWBool("overtime", false), self)) then
                 -- Reset game
                 self.lastGameStarted = false
                 self.matchStartTime = SysTime() + self:GetSettings().matchLength + 1

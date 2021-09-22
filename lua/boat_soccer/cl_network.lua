@@ -18,3 +18,16 @@ end )
 net.Receive("boat_soccer:close_derma", function()
     hook.Call("boat_soccer:close_derma")
 end )
+
+net.Receive("boat_soccer:play_end_sound", function()
+    local id = net.ReadInt(32)
+    local winner = net.ReadBool()
+
+    print(winner)
+
+    if winner then
+        boat_soccer_client.controllers[id].entity:EmitSound("game_won")
+    else
+        boat_soccer_client.controllers[id].entity:EmitSound("game_lost")
+    end
+end )

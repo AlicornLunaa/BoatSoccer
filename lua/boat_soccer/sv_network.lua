@@ -8,6 +8,7 @@ util.AddNetworkString("boat_soccer:start_game")
 util.AddNetworkString("boat_soccer:force_leave")
 util.AddNetworkString("boat_soccer:close_derma")
 util.AddNetworkString("boat_soccer:update_settings")
+util.AddNetworkString("boat_soccer:play_end_sound")
 
 -- Functions
 function boat_soccer.UpdateControllerClient(ply)
@@ -37,6 +38,14 @@ function boat_soccer.OpenMenu(ply, id)
     -- Opens the derma panel on the client
     net.Start("boat_soccer:open_menu")
         net.WriteInt(id, 32)
+    net.Send(ply)
+end
+
+function boat_soccer.PlayWinSound(ply, id, winner)
+    -- Plays the win or lose sound
+    net.Start("boat_soccer:play_end_sound")
+        net.WriteInt(id, 32)
+        net.WriteBool(winner)
     net.Send(ply)
 end
 
