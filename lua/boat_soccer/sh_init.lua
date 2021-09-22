@@ -56,3 +56,40 @@ boat_soccer_config.team1_spawns = {
     Vector(-252, -51, 5),
     Vector(-252, 51, 5)
 }
+
+-- Sounds
+sound.Add({
+    name = "goal_scored",
+    channel = CHAN_STATIC,
+    volume = 1.0,
+    level = 80,
+    pitch = 100,
+    sound = "boat_soccer/whistle.wav"
+})
+
+sound.Add({
+    name = "game_lost",
+    channel = CHAN_STATIC,
+    volume = 1.0,
+    level = 80,
+    pitch = 100,
+    sound = "boat_soccer/lose.wav"
+})
+
+sound.Add({
+    name = "game_won",
+    channel = CHAN_STATIC,
+    volume = 1.0,
+    level = 80,
+    pitch = 100,
+    sound = "boat_soccer/cheer.wav"
+})
+
+sound.Add({
+    name = "music_loop",
+    channel = CHAN_STATIC,
+    volume = 1.0,
+    level = 80,
+    pitch = 100,
+    sound = "ambient/music/country_rock_am_radio_loop.wav"
+})
