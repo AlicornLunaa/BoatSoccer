@@ -98,16 +98,16 @@ sound.Add({
     name = "boost",
     channel = CHAN_STATIC,
     volume = 0.8,
-    level = 60,
-    pitch = 100,
+    level = 80,
+    pitch = {70, 100},
     sound = "items/suitcharge1.wav"
 })
 
 sound.Add({
     name = "boost_end",
     channel = CHAN_STATIC,
-    volume = 0.8,
-    level = 60,
+    volume = 0.6,
+    level = 80,
     pitch = 100,
     sound = "items/suitchargeok1.wav"
 })
