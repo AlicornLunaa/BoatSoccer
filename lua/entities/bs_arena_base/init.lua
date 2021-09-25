@@ -374,8 +374,8 @@ function ENT:ResetRound()
     timer.Pause("roundTime")
 
     -- Spawn boats for each player on each team
-    local spawn0 = 1
-    local spawn1 = 1
+    local spawn0 = math.random(5)
+    local spawn1 = spawn0
     local introRiders = {}
     for k, v in pairs(self.spawnedBoats) do
         if (v.driver and v.driver:IsValid()) then
@@ -386,13 +386,13 @@ function ENT:ResetRound()
         local ang
         if (v.team == 0) then
             pos = self:LocalToWorld(boat_soccer_config.team0_spawns[spawn0])
-            ang = self:LocalToWorldAngles(Angle(0, 180, 0))
+            ang = self:LocalToWorldAngles(Angle(0, 270, 0))
 
             spawn0 = spawn0 + 1
             if (spawn0 > 5) then spawn0 = 1 end
         else
             pos = self:LocalToWorld(boat_soccer_config.team1_spawns[spawn1])
-            ang = self:LocalToWorldAngles(Angle(0, 0, 0))
+            ang = self:LocalToWorldAngles(Angle(0, 90, 0))
 
             spawn1 = spawn1 + 1
             if (spawn1 > 5) then spawn1 = 1 end
