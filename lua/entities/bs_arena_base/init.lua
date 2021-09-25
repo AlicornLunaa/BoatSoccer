@@ -35,13 +35,13 @@ end
 local function IntroScene(parent, pos, ang, ply)
     local bsCam = ents.Create("bs_camera")
     bsCam:Spawn()
-    bsCam:InitTransition(parent, Vector(0, 0, 150), Angle(0, 0, 0))
-    bsCam:SetTransition(Vector(-200, 200, 0), Angle(25, 0, 0), 0.01)
-    bsCam:SetTransition(Vector(0, -200, 0), Angle(2, 0, 0), 1)
-    bsCam:SetTransition(Vector(0, -200, 0), Angle(-2, 0, 0), 1)
-    bsCam:SetTransition(Vector(800, 300, 0), Angle(0, 180, 0), 2)
-    bsCam:SetTransition(Vector(0, -200, 0), Angle(2, 0, 0), 1)
-    bsCam:SetTransition(Vector(0, -200, 0), Angle(-2, 0, 0), 1)
+    bsCam:InitTransition(parent, Vector(0, 0, 150), Angle(0, 90, 0))
+    bsCam:SetTransition(Vector(150, -200, 0), Angle(25, 0, 0), 0.01)
+    bsCam:SetTransition(Vector(-200, 0, 0), Angle(2, 0, 0), 1)
+    bsCam:SetTransition(Vector(-200, 0, 0), Angle(-2, 0, 0), 1)
+    bsCam:SetTransition(Vector(350, 600, 0), Angle(0, 180, 0), 2)
+    bsCam:SetTransition(Vector(-200, 0, 0), Angle(2, 0, 0), 1)
+    bsCam:SetTransition(Vector(-200, 0, 0), Angle(-2, 0, 0), 1)
     bsCam:StartTransition(ply)
 end
 
@@ -317,14 +317,14 @@ function ENT:StartGame()
         local color
         if (v.team == 0) then
             pos = self:LocalToWorld(boat_soccer_config.team0_spawns[spawn0])
-            ang = self:LocalToWorldAngles(Angle(0, 180, 0))
+            ang = self:LocalToWorldAngles(Angle(0, 270, 0))
             color = boat_soccer_config.team0
 
             spawn0 = spawn0 + 1
             if (spawn0 > 5) then spawn0 = 1 end
         else
             pos = self:LocalToWorld(boat_soccer_config.team1_spawns[spawn1])
-            ang = self:LocalToWorldAngles(Angle(0, 0, 0))
+            ang = self:LocalToWorldAngles(Angle(0, 90, 0))
             color = boat_soccer_config.team1
 
             spawn1 = spawn1 + 1
