@@ -305,8 +305,8 @@ function ENT:StartGame()
     end )
 
     -- Spawn boats for each player on each team
-    local spawn0 = 1
-    local spawn1 = 1
+    local spawn0 = math.random(5)
+    local spawn1 = spawn0
     local introRiders = {}
     for k, v in pairs(boat_soccer.controllers[self:EntIndex()].players) do
         introRiders[#introRiders + 1] = player.GetBySteamID64(k)
