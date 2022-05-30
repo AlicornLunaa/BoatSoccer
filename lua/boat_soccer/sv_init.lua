@@ -90,7 +90,7 @@ hook.Add("PhysgunPickup", "boat_soccer:allowpickup", function(ply, ent)
         return ent.team == -1
     end
 
-    return true
+    return
 end )
 
 hook.Add("CanPlayerUnfreeze", "boat_soccer:allowfreeze", function(ply, ent)
@@ -105,7 +105,7 @@ hook.Add("CanPlayerUnfreeze", "boat_soccer:allowfreeze", function(ply, ent)
         return ent.team == -1
     end
 
-    return true
+    return
 end )
 
 local function FixBuoyancy(_, ent)
